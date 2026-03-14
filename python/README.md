@@ -66,6 +66,6 @@ Or open the dashboard at http://localhost:7933.
 
 The 6 read endpoints generate repeating query patterns. After enough observations, GL will:
 
-- Create **materialized views** for the most common patterns (list all, pending, completed, stats)
-- Create **indexes** (btree on `completed`, trigram on `title` for ILIKE searches)
-- **Rewrite** incoming queries to read from matviews instead of the base table
+- Create **covering indexes** (btree on `completed`, `id`) so Postgres can do index-only scans
+- Create a **trigram index** on `title` for the `ILIKE %...%` search pattern
+- With enough data and latency, create **materialized views** for the heaviest patterns and **rewrite** queries to read from them
