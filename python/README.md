@@ -19,10 +19,21 @@ docker compose up -d
     --port 7932
 ```
 
-### 3. Start the app
+By default GL starts in **bellhop mode**, which observes query patterns and suggests optimizations but does not modify your database. This is a safe way to see what GL would do before enabling active optimization.
+
+### 3. Set up the app
+
+Create a virtual environment and install dependencies:
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate   # on Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+Then start the app:
+
+```bash
 uvicorn app:app --reload
 ```
 
@@ -38,15 +49,15 @@ DATABASE_URL=postgres://gl:gl@localhost:5432/todos uvicorn app:app --reload
 ./generate_traffic.sh
 ```
 
-Creates 20 todos, sends 260 read requests across 6 different query patterns, then completes some todos and reads again. This gives GL enough observations to start creating matviews.
+Creates 20 todos, sends 260 read requests across 6 different query patterns, then completes some todos and reads again. This gives GL enough observations to start building suggestions.
 
-### 5. Check what GL did
+### 5. Check what GL observed
 
 ```bash
 goldlapel status --upstream postgres://gl:gl@localhost:5432/todos
 ```
 
-Or open the dashboard at http://localhost:7933.
+Or open the dashboard at http://localhost:7933. You'll see the query patterns GL detected and what optimizations it recommends.
 
 ## Endpoints
 
@@ -62,9 +73,28 @@ Or open the dashboard at http://localhost:7933.
 | PUT | `/todos/{id}?completed=true` | Update todo |
 | DELETE | `/todos/{id}` | Delete todo |
 
-## What GL optimizes
+## What bellhop mode does
 
-The 6 read endpoints generate repeating query patterns. After enough observations, GL will:
+The 6 read endpoints generate repeating query patterns. In bellhop mode (the default), GL will:
+
+- **Observe** query patterns and track frequency, latency, and row counts
+- **Analyze** which queries would benefit from indexes, matviews, or rewrites
+- **Suggest** optimizations via the dashboard and `goldlapel status` output
+
+GL does not create indexes, materialized views, or rewrite queries in bellhop mode. It watches and reports.
+
+## Try butler mode
+
+To have GL **actively optimize** your database (create indexes, materialized views, and rewrite queries), start it in butler mode:
+
+```bash
+./target/release/goldlapel \
+    --upstream postgres://gl:gl@localhost:5432/todos \
+    --port 7932 \
+    --mode butler
+```
+
+Butler mode requires a license or active trial. With butler mode enabled, GL will:
 
 - Create **covering indexes** (btree on `completed`, `id`) so Postgres can do index-only scans
 - Create a **trigram index** on `title` for the `ILIKE %...%` search pattern

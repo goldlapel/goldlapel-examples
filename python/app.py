@@ -1,18 +1,18 @@
 import os
+from contextlib import asynccontextmanager
+
 import psycopg
 from fastapi import FastAPI, HTTPException
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgres://gl:gl@localhost:7932/todos")
-
-app = FastAPI(title="Todo App (Gold Lapel Example)")
 
 
 def get_conn():
     return psycopg.connect(DATABASE_URL)
 
 
-@app.on_event("startup")
-def create_table():
+@asynccontextmanager
+async def lifespan(app):
     with get_conn() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS todos (
@@ -25,6 +25,10 @@ def create_table():
             )
         """)
         conn.commit()
+    yield
+
+
+app = FastAPI(title="Todo App (Gold Lapel Example)", lifespan=lifespan)
 
 
 # --- Reads (these are the patterns GL will optimize) ---

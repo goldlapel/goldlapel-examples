@@ -41,7 +41,7 @@ echo "Sent 80 more read requests"
 
 echo ""
 echo "=== Done ==="
-echo "Total: 20 writes + 260 reads"
+echo "Total: 28 writes (20 creates + 8 updates) + 260 reads"
 echo ""
 echo "Now check GL status:"
 echo "  goldlapel status --upstream postgres://gl:gl@localhost:5432/todos"
