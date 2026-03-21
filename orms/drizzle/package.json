@@ -6,6 +6,6 @@
     "goldlapel": "latest",
     "goldlapel-drizzle": "latest",
     "drizzle-orm": "latest",
-    "pg": "latest"
+    "pg": "^8.20.0"
   }
 }
