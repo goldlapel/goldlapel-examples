@@ -5,7 +5,10 @@ venv/
 .venv/
 node_modules/
 vendor/bundle/
-db/schema.rb
+**/db/schema.rb
+bin/
+obj/
+target/
 docs/
 CLAUDE.md
 .claude/
