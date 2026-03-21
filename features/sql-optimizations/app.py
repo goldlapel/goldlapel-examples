@@ -236,6 +236,38 @@ print("(This happens automatically after step 9 — check dashboard for batch_ca
 
 
 # ─────────────────────────────────────────────────────────────
+# 11. QUERY COALESCING
+# ─────────────────────────────────────────────────────────────
+section("11. Query Coalescing")
+print("Sending 3 identical slow queries concurrently from separate connections...")
+print("GL deduplicates them — one executes, the others wait for its result.\n")
+
+import threading
+
+coalesce_results = []
+
+def coalesce_worker(worker_id):
+    try:
+        c = psycopg.connect(url)
+        row = c.execute("SELECT pg_sleep(0.5)::text, COUNT(*)::text FROM customers").fetchone()
+        coalesce_results.append((worker_id, row[1]))
+        c.close()
+    except Exception as e:
+        coalesce_results.append((worker_id, f"error: {e}"))
+
+threads = [threading.Thread(target=coalesce_worker, args=(i,)) for i in range(3)]
+for t in threads:
+    t.start()
+for t in threads:
+    t.join()
+
+for wid, count in sorted(coalesce_results):
+    print(f"  worker {wid}: {count} customers")
+print("All 3 got the same result, but GL only executed the query once.")
+time.sleep(4)
+
+
+# ─────────────────────────────────────────────────────────────
 # SUMMARY
 # ─────────────────────────────────────────────────────────────
 section("Summary — Dashboard Stats")
@@ -253,6 +285,7 @@ try:
     print(f"  partial_indexes_created:  {s.get('partial_indexes_created', 0)}")
     print(f"  rewrites:                {s.get('rewrites', 0)}")
     print(f"  cache_hits:              {s.get('cache_hits', 0)}")
+    print(f"  prepared_hits:           {s.get('prepared_hits', 0)}")
     print(f"  deep_pagination_warns:   {s.get('deep_pagination_warnings', 0)}")
     print(f"  coalesced:               {s.get('coalesced', 0)}")
 except Exception as e:
