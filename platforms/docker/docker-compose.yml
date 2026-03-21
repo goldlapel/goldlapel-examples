@@ -9,9 +9,10 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   goldlapel:
-    image: ghcr.io/goldlapel/goldlapel
+    image: goldlapel/goldlapel
     environment:
       GOLDLAPEL_UPSTREAM: postgres://gl:gl@postgres:5432/todos
+      POSTGRES_PASSWORD: gl
     ports:
       - "7932:7932"
       - "7933:7933"
