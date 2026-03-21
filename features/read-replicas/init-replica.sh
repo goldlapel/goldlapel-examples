@@ -11,5 +11,8 @@ done
 # Give it a moment so pg_basebackup can authenticate.
 sleep 2
 
-pg_basebackup -h primary -U gl -D /var/lib/postgresql/data -Fp -Xs -R
-exec postgres -c hot_standby=on
+# Run pg_basebackup and postgres as the postgres user (not root)
+chown postgres:postgres /var/lib/postgresql/data
+chmod 700 /var/lib/postgresql/data
+su postgres -c "pg_basebackup -h primary -U gl -D /var/lib/postgresql/data -Fp -Xs -R"
+exec su postgres -c "postgres -c hot_standby=on"

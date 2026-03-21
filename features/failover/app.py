@@ -3,7 +3,7 @@ import psycopg
 import time
 
 url = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
-    "standby": "postgres://gl:gl@localhost:5433/todos",
+    "fallback": "postgres://gl:gl@localhost:5433/todos",
 })
 
 time.sleep(2)

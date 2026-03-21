@@ -59,3 +59,8 @@ Infrastructure demos for GL's advanced features.
 | [features/connection-pooling](features/connection-pooling/) | Session vs transaction pool modes |
 | [features/read-replicas](features/read-replicas/) | Automatic read routing with read-after-write protection |
 | [features/failover](features/failover/) | Automatic failover from primary to standby |
+| [features/n1-detection](features/n1-detection/) | Detect N+1 query anti-patterns |
+| [features/matviews](features/matviews/) | Automatic materialized view creation |
+| [features/hot-reload](features/hot-reload/) | Edit config at runtime without restart |
+| [features/skip-annotation](features/skip-annotation/) | Opt out queries with `/* goldlapel:skip */` |
+| [features/dashboard-api](features/dashboard-api/) | Programmatic access to stats, audit, and export APIs |
