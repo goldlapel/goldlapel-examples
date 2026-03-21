@@ -2,9 +2,10 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="GoldLapel" Version="*" />
+    <PackageReference Include="GoldLapel" Version="0.1.0-rc5" />
     <PackageReference Include="Npgsql" Version="8.*" />
   </ItemGroup>
 </Project>
