@@ -1,2 +1,0 @@
-goldlapel
-psycopg[binary]

@@ -52,15 +52,24 @@ ORM-level plugins that intercept the connection layer.
 
 ## Features
 
-Infrastructure demos for GL's advanced features.
+### SQL Optimizations
 
 | Example | What it shows |
 |---------|---------------|
-| [features/connection-pooling](features/connection-pooling/) | Session vs transaction pool modes |
-| [features/read-replicas](features/read-replicas/) | Automatic read routing with read-after-write protection |
-| [features/failover](features/failover/) | Automatic failover from primary to standby |
-| [features/n1-detection](features/n1-detection/) | Detect N+1 query anti-patterns |
-| [features/matviews](features/matviews/) | Automatic materialized view creation |
-| [features/hot-reload](features/hot-reload/) | Edit config at runtime without restart |
-| [features/skip-annotation](features/skip-annotation/) | Opt out queries with `/* goldlapel:skip */` |
-| [features/dashboard-api](features/dashboard-api/) | Programmatic access to stats, audit, and export APIs |
+| [features/sql-optimizations](features/sql-optimizations/) | All optimization strategies in one script — matviews, indexes, caching, N+1 detection, and more |
+
+### Infrastructure
+
+| Example | What it shows |
+|---------|---------------|
+| [features/infrastructure/connection-pooling](features/infrastructure/connection-pooling/) | Session vs transaction pool modes |
+| [features/infrastructure/read-replicas](features/infrastructure/read-replicas/) | Automatic read routing with read-after-write protection |
+| [features/infrastructure/failover](features/infrastructure/failover/) | Automatic failover from primary to standby |
+
+### Operations
+
+| Example | What it shows |
+|---------|---------------|
+| [features/operations/hot-reload](features/operations/hot-reload/) | Edit config at runtime without restart |
+| [features/operations/skip-annotation](features/operations/skip-annotation/) | Opt out queries with `/* goldlapel:skip */` |
+| [features/operations/dashboard-api](features/operations/dashboard-api/) | Programmatic access to stats, audit, and export APIs |
