@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: gl
+      POSTGRES_PASSWORD: gl
+      POSTGRES_DB: todos
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  goldlapel:
+    image: ghcr.io/goldlapel/goldlapel
+    environment:
+      GOLDLAPEL_UPSTREAM: postgres://gl:gl@postgres:5432/todos
+    ports:
+      - "7932:7932"
+      - "7933:7933"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

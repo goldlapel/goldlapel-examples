@@ -1,0 +1,6 @@
+{
+  "name": "goldlapel/php-example",
+  "require": {
+    "goldlapel/goldlapel": "*"
+  }
+}

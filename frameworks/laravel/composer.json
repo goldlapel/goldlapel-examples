@@ -1,0 +1,14 @@
+{
+    "name": "goldlapel/example-laravel",
+    "description": "Gold Lapel Laravel example app",
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0",
+        "goldlapel/goldlapel-laravel": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}

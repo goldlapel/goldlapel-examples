@@ -1,0 +1,11 @@
+{
+  "name": "goldlapel-drizzle-example",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "goldlapel": "latest",
+    "goldlapel-drizzle": "latest",
+    "drizzle-orm": "latest",
+    "pg": "latest"
+  }
+}

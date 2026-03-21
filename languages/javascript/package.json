@@ -1,0 +1,9 @@
+{
+  "name": "goldlapel-javascript-example",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "goldlapel": "latest",
+    "pg": "latest"
+  }
+}

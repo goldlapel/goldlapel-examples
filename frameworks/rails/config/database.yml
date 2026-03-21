@@ -1,0 +1,9 @@
+default: &default
+  adapter: postgresql
+  host: localhost
+  username: gl
+  password: gl
+
+development:
+  <<: *default
+  database: todos

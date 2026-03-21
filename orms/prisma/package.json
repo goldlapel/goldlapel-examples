@@ -1,0 +1,11 @@
+{
+  "name": "goldlapel-prisma-example",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "goldlapel": "latest",
+    "goldlapel-prisma": "latest",
+    "@prisma/client": "latest",
+    "prisma": "latest"
+  }
+}
