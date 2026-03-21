@@ -1,6 +1,7 @@
 {
     "name": "goldlapel/example-laravel",
     "description": "Gold Lapel Laravel example app",
+    "minimum-stability": "RC",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",

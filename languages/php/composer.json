@@ -1,5 +1,6 @@
 {
   "name": "goldlapel/php-example",
+  "minimum-stability": "RC",
   "require": {
     "goldlapel/goldlapel": "*"
   }

@@ -5,7 +5,7 @@
   "dependencies": {
     "goldlapel": "latest",
     "goldlapel-prisma": "latest",
-    "@prisma/client": "latest",
-    "prisma": "latest"
+    "@prisma/client": "^5",
+    "prisma": "^5"
   }
 }

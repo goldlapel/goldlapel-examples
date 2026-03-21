@@ -1,6 +1,6 @@
 import { withGoldLapel } from 'goldlapel-prisma'
 
-const prisma = withGoldLapel()
+const prisma = await withGoldLapel({ url: 'postgres://gl:gl@localhost:5432/todos' })
 
 await prisma.todo.create({ data: { title: 'Try Gold Lapel' } })
 await prisma.todo.create({ data: { title: 'Read the docs', done: true } })

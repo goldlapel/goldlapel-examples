@@ -13,7 +13,7 @@ $pdo->exec('CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text 
 $pdo->prepare('INSERT INTO todos (title) VALUES (?)')->execute(['Try Gold Lapel']);
 $pdo->prepare('INSERT INTO todos (title, done) VALUES (?, ?)')->execute(['Read the docs', true]);
 
-foreach ($pdo->query('SELECT id, title, done FROM todos ORDER BY id') as $row) {
+foreach ($pdo->query('SELECT id, title, done FROM todos ORDER BY id', PDO::FETCH_ASSOC) as $row) {
     echo json_encode($row) . "\n";
 }
 
