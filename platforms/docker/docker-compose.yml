@@ -12,7 +12,9 @@ services:
     image: goldlapel/goldlapel
     environment:
       GOLDLAPEL_UPSTREAM: postgres://gl:gl@postgres:5432/todos
+      POSTGRES_USER: gl
       POSTGRES_PASSWORD: gl
+      POSTGRES_DB: todos
     ports:
       - "7932:7932"
       - "7933:7933"
