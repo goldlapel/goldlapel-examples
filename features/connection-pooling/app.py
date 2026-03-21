@@ -1,37 +1,27 @@
 import sys
-import threading
+import time
 import goldlapel
 import psycopg
 
 mode = sys.argv[1] if len(sys.argv) > 1 else "transaction"
-pool_size = int(sys.argv[2]) if len(sys.argv) > 2 else (2 if mode == "transaction" else None)
-print(f"Pool mode: {mode}, pool_size: {pool_size or 'default'}")
+pool_size = int(sys.argv[2]) if len(sys.argv) > 2 else 20
+print(f"Pool mode: {mode}, pool_size: {pool_size}")
 
-config = {"pool_mode": mode}
-if pool_size is not None:
-    config["pool_size"] = pool_size
+url = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+    "pool_mode": mode,
+    "pool_size": pool_size,
+})
 
-url = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config=config)
-
-results = []
-
-def worker(name):
+pids = []
+for i in range(10):
     with psycopg.connect(url) as conn:
         pid = conn.execute("SELECT pg_backend_pid()").fetchone()[0]
-        conn.execute("SELECT pg_sleep(0.1)")
-        results.append((name, pid))
+        pids.append(pid)
+        print(f"  connection {i+1}: backend pid {pid}")
+    time.sleep(0.1)
 
-threads = [threading.Thread(target=worker, args=(f"worker-{i}",)) for i in range(5)]
-for t in threads:
-    t.start()
-for t in threads:
-    t.join()
-
-for name, pid in sorted(results):
-    print(f"  {name}: backend pid {pid}")
-
-unique_pids = len(set(pid for _, pid in results))
-pool_label = f"pool_size={pool_size}" if pool_size else "default pool_size"
-print(f"\n{unique_pids} unique backend connections used by 5 workers ({pool_label})")
+unique = len(set(pids))
+print(f"\n{unique} unique backend PIDs across 10 sequential connections")
+print(f"Pool mode: {mode} — {'connections reused between transactions' if mode == 'transaction' else 'each session pinned to its own backend'}")
 
 goldlapel.stop()

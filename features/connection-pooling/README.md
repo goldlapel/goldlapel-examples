@@ -14,21 +14,29 @@ See the difference between session and transaction pool modes.
    pip install -r requirements.txt
    ```
 
-3. Run in transaction mode (defaults to pool_size=2):
+3. Run in transaction mode:
    ```bash
    python app.py transaction
    ```
 
-4. Run in session mode (uses GL default pool_size — one connection per client session):
+4. Run in session mode:
    ```bash
    python app.py session
    ```
 
 5. Experiment with a custom pool_size:
    ```bash
-   python app.py transaction 4
+   python app.py transaction 2
    ```
 
 ## What to look for
 
-In **transaction mode** with pool_size=2, all 5 workers share just 2 backend connections — you'll see only 2 unique PIDs because GL multiplexes transactions over a small pool. In **session mode**, each worker gets its own dedicated backend connection (5 unique PIDs) because GL pins a backend to each client session. Check the dashboard at http://localhost:7933.
+The app opens 10 sequential connections through GL and prints which backend PID each one gets.
+
+In **transaction mode**, backend connections return to the pool after each transaction. Sequential clients reuse the same backends — you'll see very few unique PIDs (often just 1) because the pool recycles idle connections.
+
+In **session mode**, each client session is pinned to its own dedicated backend for the session's lifetime. Since the app opens and closes connections sequentially (only 1 active at a time), you'll also see connection reuse — but if you add concurrency, session mode would pin each concurrent client to a separate backend.
+
+The key difference shows up under concurrency: transaction mode multiplexes many clients over a small pool, while session mode dedicates a backend per client session.
+
+Check the dashboard at http://localhost:7933.
