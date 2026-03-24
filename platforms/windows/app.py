@@ -1,6 +1,6 @@
-import goldlapel
+import psycopg
 
-conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos")
+conn = psycopg.connect("postgres://gl:gl@localhost:7932/todos")
 
 conn.execute("CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)")
 conn.execute("DELETE FROM todos")
@@ -11,4 +11,3 @@ for row in conn.execute("SELECT id, title, done FROM todos ORDER BY id"):
     print(row)
 
 conn.close()
-goldlapel.stop()

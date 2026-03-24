@@ -6,10 +6,11 @@ mode = sys.argv[1] if len(sys.argv) > 1 else "transaction"
 pool_size = int(sys.argv[2]) if len(sys.argv) > 2 else 20
 print(f"Pool mode: {mode}, pool_size: {pool_size}")
 
-goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
     "pool_mode": mode,
     "pool_size": pool_size,
 })
+conn.close()
 
 pids = []
 for i in range(10):

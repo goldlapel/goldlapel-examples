@@ -1,10 +1,10 @@
 import os
 from contextlib import asynccontextmanager
 
-import goldlapel
+import psycopg
 from fastapi import FastAPI, HTTPException
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgres://gl:gl@localhost:5432/todos")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgres://gl:gl@localhost:7932/todos")
 
 conn = None
 
@@ -12,7 +12,7 @@ conn = None
 @asynccontextmanager
 async def lifespan(app):
     global conn
-    conn = goldlapel.start(DATABASE_URL)
+    conn = psycopg.connect(DATABASE_URL)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS todos (
             id SERIAL PRIMARY KEY,
@@ -26,7 +26,6 @@ async def lifespan(app):
     conn.commit()
     yield
     conn.close()
-    goldlapel.stop()
 
 
 app = FastAPI(title="Todo App (Gold Lapel Example)", lifespan=lifespan)
