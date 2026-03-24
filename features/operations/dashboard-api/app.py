@@ -2,11 +2,8 @@ import time
 import json
 import urllib.request
 import goldlapel
-import psycopg
 
-url = goldlapel.start("postgres://gl:gl@localhost:5432/todos")
-
-conn = psycopg.connect(url)
+conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos")
 
 conn.execute("DROP TABLE IF EXISTS orders")
 conn.execute("DROP TABLE IF EXISTS customers")

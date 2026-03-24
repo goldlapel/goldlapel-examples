@@ -2,11 +2,10 @@ import json
 import time
 import urllib.request
 import goldlapel
-import psycopg
 
 UPSTREAM = "postgres://gl:gl@localhost:5432/todos"
 
-url = goldlapel.start(UPSTREAM, config={
+conn = goldlapel.start(UPSTREAM, config={
     "min_pattern_count": 3,
     "report_interval_secs": 3,
     "n1_threshold": 5,
@@ -14,8 +13,6 @@ url = goldlapel.start(UPSTREAM, config={
     "enable_coalescing": True,
     "deep_pagination_threshold": 100,
 })
-
-conn = psycopg.connect(url)
 
 # --- Schema setup ---
 
@@ -248,7 +245,7 @@ coalesce_results = []
 
 def coalesce_worker(worker_id):
     try:
-        c = psycopg.connect(url)
+        c = goldlapel.connect()
         row = c.execute("SELECT pg_sleep(0.5)::text, COUNT(*)::text FROM customers").fetchone()
         coalesce_results.append((worker_id, row[1]))
         c.close()

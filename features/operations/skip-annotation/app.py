@@ -1,13 +1,10 @@
 import time
 import goldlapel
-import psycopg
 
-url = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
     "min_pattern_count": 3,
     "report_interval_secs": 3,
 })
-
-conn = psycopg.connect(url)
 
 conn.execute("DROP TABLE IF EXISTS customers")
 conn.execute("""

@@ -11,7 +11,7 @@ with open(config_path, "w") as f:
 
 print(f"Config file: {config_path}")
 
-url = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
     "config": config_path,
 })
 
@@ -30,4 +30,5 @@ time.sleep(35)
 print("Done — check dashboard to confirm mode changed to bellhop")
 print("Dashboard: http://localhost:7933")
 
+conn.close()
 goldlapel.stop()
