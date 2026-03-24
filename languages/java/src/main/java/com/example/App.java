@@ -1,18 +1,11 @@
 package com.example;
 
 import com.goldlapel.GoldLapel;
-import java.net.URI;
 import java.sql.*;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        String glUrl = GoldLapel.start("postgres://gl:gl@localhost:5432/todos");
-
-        URI uri = new URI(glUrl);
-        String[] userInfo = uri.getUserInfo().split(":");
-        String jdbcUrl = "jdbc:postgresql://" + uri.getHost() + ":" + uri.getPort() + uri.getPath();
-
-        try (Connection conn = DriverManager.getConnection(jdbcUrl, userInfo[0], userInfo[1])) {
+        try (Connection conn = GoldLapel.start("postgres://gl:gl@localhost:5432/todos")) {
             conn.createStatement().execute(
                 "CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)");
 

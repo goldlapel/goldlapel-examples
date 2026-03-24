@@ -1,8 +1,6 @@
 require "goldlapel"
-require "pg"
 
-url = GoldLapel.start("postgres://gl:gl@localhost:5432/todos")
-conn = PG.connect(url)
+conn = GoldLapel.start("postgres://gl:gl@localhost:5432/todos")
 
 conn.exec("CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)")
 conn.exec_params("INSERT INTO todos (title) VALUES ($1)", ["Try Gold Lapel"])

@@ -1,13 +1,6 @@
 using Npgsql;
 
-var glUrl = GoldLapel.GoldLapel.Start("postgres://gl:gl@localhost:5432/todos");
-
-var uri = new Uri(glUrl);
-var userInfo = uri.UserInfo.Split(':');
-var connStr = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]}";
-
-await using var conn = new NpgsqlConnection(connStr);
-await conn.OpenAsync();
+await using var conn = GoldLapel.GoldLapel.Start("postgres://gl:gl@localhost:5432/todos");
 
 await new NpgsqlCommand("CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)", conn).ExecuteNonQueryAsync();
 
