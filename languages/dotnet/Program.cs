@@ -1,6 +1,6 @@
 using Npgsql;
 
-await using var conn = GoldLapel.GoldLapel.Start("postgres://gl:gl@localhost:5432/todos");
+await using var conn = GoldLapel.GoldLapel.StartConnection("postgres://gl:gl@localhost:5432/todos");
 
 await new NpgsqlCommand("CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)", conn).ExecuteNonQueryAsync();
 

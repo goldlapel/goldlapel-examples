@@ -6,15 +6,21 @@ import (
 	"log"
 
 	"github.com/goldlapel/goldlapel-go"
+	"github.com/jackc/pgx/v5"
 )
 
 func main() {
 	ctx := context.Background()
-	conn, err := goldlapel.Start("postgres://gl:gl@localhost:5432/todos")
+	url, err := goldlapel.Start("postgres://gl:gl@localhost:5432/todos")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer goldlapel.Stop()
+
+	conn, err := pgx.Connect(ctx, url)
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer conn.Close(ctx)
 
 	_, err = conn.Exec(ctx, "CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)")
