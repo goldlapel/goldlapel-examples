@@ -12,3 +12,8 @@ target/
 docs/
 CLAUDE.md
 .claude/
+
+# Lockfiles (regenerated locally)
+**/package-lock.json
+**/Gemfile.lock
+**/go.sum
