@@ -1,4 +1,4 @@
-import { drizzle } from 'goldlapel-drizzle'
+import { drizzle, stop } from 'goldlapel-drizzle'
 import { todos } from './schema.js'
 import { asc } from 'drizzle-orm'
 import { sql } from 'drizzle-orm'
@@ -12,4 +12,4 @@ await db.insert(todos).values({ title: 'Read the docs', done: true })
 const rows = await db.select().from(todos).orderBy(asc(todos.id))
 console.log(rows)
 
-process.exit(0)
+await stop()

@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@prisma/client": "^5",
     "goldlapel": "latest",
     "goldlapel-prisma": "latest",
-    "@prisma/client": "^5",
     "prisma": "^5"
   }
 }
