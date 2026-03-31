@@ -1,4 +1,4 @@
-import { withGoldLapel } from 'goldlapel-prisma'
+import { withGoldLapel, stop } from 'goldlapel-prisma'
 
 const prisma = await withGoldLapel({ url: 'postgres://gl:gl@localhost:5432/todos' })
 
@@ -9,3 +9,4 @@ const todos = await prisma.todo.findMany({ orderBy: { id: 'asc' } })
 console.log(todos)
 
 await prisma.$disconnect()
+await stop()

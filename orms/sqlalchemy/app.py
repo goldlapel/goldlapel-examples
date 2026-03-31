@@ -1,4 +1,4 @@
-from goldlapel_sqlalchemy import create_engine
+from goldlapel_sqlalchemy import create_engine, stop
 from sqlalchemy import text
 
 engine = create_engine("postgresql+psycopg://gl:gl@localhost:5432/todos")
@@ -12,3 +12,4 @@ with engine.connect() as conn:
         print(row)
 
 engine.dispose()
+stop()

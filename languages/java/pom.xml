@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.goldlapel</groupId>
             <artifactId>goldlapel</artifactId>
-            <version>0.1.0-rc6</version>
+            <version>0.1.0-rc14</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
