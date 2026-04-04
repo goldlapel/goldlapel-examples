@@ -1,4 +1,4 @@
 source "https://rubygems.org"
 
-gem "goldlapel", ">= 0.1.0.pre.rc6"
+gem "goldlapel", ">= 0.1.0.pre.rc15"
 gem "pg"

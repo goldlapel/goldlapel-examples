@@ -2,5 +2,5 @@ source "https://rubygems.org"
 
 gem "rails", "~> 7.1"
 gem "pg"
-gem "goldlapel-rails", ">= 0.1.0.pre.rc6"
+gem "goldlapel-rails", ">= 0.1.0.pre.rc15"
 gem "puma"
