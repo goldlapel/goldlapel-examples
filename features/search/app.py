@@ -114,15 +114,63 @@ print("  See docs/extensions for pgvector setup instructions.")
 
 
 # ─────────────────────────────────────────────────────────────
+# 6. FACETED SEARCH (terms aggregation)
+# ─────────────────────────────────────────────────────────────
+section("6. Faceted Search — facets()")
+
+# Facets without filter
+facet_counts = goldlapel.facets(conn, "articles", "author")
+print("  facets('articles', 'author') → value counts:")
+for f in facet_counts:
+    print(f"    {f['value']}: {f['count']}")
+
+# Facets with search filter
+filtered = goldlapel.facets(conn, "articles", "author",
+    query="PostgreSQL", query_column="body")
+print(f"\n  facets(..., query='PostgreSQL') → {len(filtered)} authors match:")
+for f in filtered:
+    print(f"    {f['value']}: {f['count']}")
+
+
+# ─────────────────────────────────────────────────────────────
+# 7. AGGREGATIONS (metric aggregations)
+# ─────────────────────────────────────────────────────────────
+section("7. Aggregations — aggregate()")
+
+total = goldlapel.aggregate(conn, "articles", "id", "count")
+print(f"  aggregate('articles', 'id', 'count') → {total[0]['value']}")
+
+by_author = goldlapel.aggregate(conn, "articles", "id", "count", group_by="author")
+print("  aggregate(..., 'count', group_by='author'):")
+for row in by_author:
+    print(f"    {row['author']}: {row['value']}")
+
+
+# ─────────────────────────────────────────────────────────────
+# 8. CUSTOM SEARCH CONFIG
+# ─────────────────────────────────────────────────────────────
+section("8. Custom Search Config — create_search_config()")
+
+goldlapel.create_search_config(conn, "my_search", copy_from="english")
+print("  created config 'my_search' (copy of english)")
+
+results = goldlapel.search(conn, "articles", "body", "database", lang="my_search")
+print(f"  search(..., lang='my_search') → {len(results)} results")
+
+
+# ─────────────────────────────────────────────────────────────
 # SUMMARY
 # ─────────────────────────────────────────────────────────────
 section("Summary")
-print("  5 search methods demonstrated:")
-print("    search()          — full-text search with ranking and highlighting")
-print("    search_fuzzy()    — typo-tolerant matching ('Alic' → 'Alice')")
-print("    search_phonetic() — sound-alike matching ('Smyth' → 'Smith')")
-print("    suggest()         — autocomplete/typeahead ('Post' → 'PostgreSQL...')")
-print("    similar()         — vector similarity (requires embeddings)")
+print("  8 search methods demonstrated:")
+print("    search()               — full-text search with ranking and highlighting")
+print("    search_fuzzy()         — typo-tolerant matching ('Alic' → 'Alice')")
+print("    search_phonetic()      — sound-alike matching ('Smyth' → 'Smith')")
+print("    suggest()              — autocomplete/typeahead ('Post' → 'PostgreSQL...')")
+print("    similar()              — vector similarity (requires embeddings)")
+print("    facets()               — terms aggregation with search filtering")
+print("    aggregate()            — metric aggregations (count, sum, avg, min, max)")
+print("    create_search_config() — custom text search configurations")
 print("\n  No Elasticsearch. No Solr. No sync pipeline.")
 print("  Just PostgreSQL.")
 
