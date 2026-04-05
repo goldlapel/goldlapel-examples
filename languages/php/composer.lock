@@ -1,0 +1,59 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "f8a2b5fa1661a306965d2eb7924bacf2",
+    "packages": [
+        {
+            "name": "goldlapel/goldlapel",
+            "version": "0.1.0-rc6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/goldlapel/goldlapel-php.git",
+                "reference": "6a1d9a0084c883473ae9634bca100a19b940ab90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/goldlapel/goldlapel-php/zipball/6a1d9a0084c883473ae9634bca100a19b940ab90",
+                "reference": "6a1d9a0084c883473ae9634bca100a19b940ab90",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.0 || ^11.0"
+            },
+            "bin": [
+                "bin/goldlapel"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GoldLapel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP wrapper for the Gold Lapel self-optimizing Postgres proxy",
+            "support": {
+                "issues": "https://github.com/goldlapel/goldlapel-php/issues",
+                "source": "https://github.com/goldlapel/goldlapel-php/tree/v0.1.0-rc6"
+            },
+            "time": "2026-03-21T11:04:01+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "RC",
+    "stability-flags": {},
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
+}

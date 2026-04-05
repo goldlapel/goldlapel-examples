@@ -1,0 +1,28 @@
+  [1m[35m (33.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (18.6ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7080081426352088385)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (2.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.5ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (6.5ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-03-21 22:34:59.600042', '2026-03-21 22:34:59.600048') RETURNING "key"[0m
+Migrating to CreateTodos (20240101000000)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (15.6ms)[0m  [1m[35mCREATE TABLE "todos" ("id" bigserial primary key, "title" character varying NOT NULL, "done" boolean DEFAULT FALSE)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (1.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240101000000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT pg_advisory_unlock(7080081426352088385)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started POST "/todos" for ::1 at 2026-03-21 15:35:04 -0700
+Processing by TodosController#create as */*
+  Parameters: {"title"=>"Test Rails", "todo"=>{"title"=>"Test Rails"}}
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mTodo Create (3.6ms)[0m  [1m[32mINSERT INTO "todos" ("title", "done") VALUES ($1, $2) RETURNING "id"[0m  [["title", "Test Rails"], ["done", false]]
+  [1m[36mTRANSACTION (6.9ms)[0m  [1m[35mCOMMIT[0m
+Completed 201 Created in 41ms (Views: 1.1ms | ActiveRecord: 82.3ms (1 query, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/todos" for ::1 at 2026-03-21 15:35:04 -0700
+Processing by TodosController#index as */*
+  [1m[36mTodo Load (1.2ms)[0m  [1m[34mSELECT "todos".* FROM "todos" ORDER BY "todos"."id" ASC[0m
+Completed 200 OK in 30ms (Views: 3.0ms | ActiveRecord: 1.2ms (1 query, 0 cached) | GC: 11.4ms)
+
+
