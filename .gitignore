@@ -4,7 +4,7 @@ __pycache__/
 venv/
 .venv/
 node_modules/
-vendor/bundle/
+vendor/
 **/db/schema.rb
 bin/
 obj/
@@ -17,3 +17,9 @@ CLAUDE.md
 **/package-lock.json
 **/Gemfile.lock
 **/go.sum
+**/storage/framework/views/
+**/storage/framework/cache/
+**/bootstrap/cache/
+**/*.lock
+**/composer.lock
+**/migrations/
