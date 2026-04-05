@@ -14,7 +14,7 @@ Install GL as a local binary and proxy a FastAPI todo app through it.
    # From the goldlapel repo (after cargo build --release)
    ./target/release/goldlapel \
        --upstream postgres://gl:gl@localhost:5432/todos \
-       --port 7932
+       --proxy-port 7932
    ```
    By default GL starts in **bellhop mode**, which observes query patterns and suggests optimizations but does not modify your database.
 
@@ -70,7 +70,7 @@ To have GL **actively optimize** your database (create indexes, materialized vie
 ```bash
 ./target/release/goldlapel \
     --upstream postgres://gl:gl@localhost:5432/todos \
-    --port 7932 \
+    --proxy-port 7932 \
     --mode butler
 ```
 

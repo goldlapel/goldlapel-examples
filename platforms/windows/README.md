@@ -16,7 +16,7 @@ Install GL via PowerShell and proxy a simple app through it.
 
 3. Start Gold Lapel:
    ```powershell
-   goldlapel --upstream postgres://gl:gl@localhost:5432/todos --port 7932
+   goldlapel --upstream postgres://gl:gl@localhost:5432/todos --proxy-port 7932
    ```
 
 4. Install Python deps (in another terminal):
