@@ -1,5 +1,4 @@
 import time
-import threading
 import goldlapel
 
 UPSTREAM = "postgres://gl:gl@localhost:5432/todos"

@@ -52,6 +52,14 @@ ORM-level plugins that intercept the connection layer.
 
 ## Features
 
+### Data Structures, Search & Streams
+
+| Example | What it shows |
+|---------|---------------|
+| [features/data-structures](features/data-structures/) | 21 Redis-style data structure methods — counters, hashes, sorted sets, queues, pub/sub, geospatial |
+| [features/search](features/search/) | 13 Elasticsearch-parity search methods — full-text, fuzzy, phonetic, vector, autocomplete, aggregations, percolator, relevance tuning |
+| [features/streams](features/streams/) | 5 stream methods — append-only logs with consumer groups, acknowledgment, and claim |
+
 ### SQL Optimizations
 
 | Example | What it shows |
