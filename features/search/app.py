@@ -186,10 +186,33 @@ print(f"  percolate_delete('nonexistent') → {not_found}")
 
 
 # ─────────────────────────────────────────────────────────────
+# 10. RELEVANCE TUNING (analyze + explain)
+# ─────────────────────────────────────────────────────────────
+section("10. Relevance Tuning — analyze() / explain_score()")
+
+tokens = goldlapel.analyze(conn, "The quick brown foxes jumped")
+print("  analyze('The quick brown foxes jumped'):")
+for t in tokens:
+    if t['lexemes']:
+        print(f"    '{t['token']}' → {t['lexemes']}  ({t['alias']})")
+
+print()
+first_article = goldlapel.search(conn, "articles", "body", "database", limit=1)
+if first_article:
+    aid = first_article[0]['id']
+    explanation = goldlapel.explain_score(conn, "articles", "body", "database", "id", aid)
+    print(f"  explain_score(article {aid}, 'database'):")
+    print(f"    matches:         {explanation['matches']}")
+    print(f"    score:           {explanation['score']:.6f}")
+    print(f"    query_tokens:    {explanation['query_tokens']}")
+    print(f"    headline:        {explanation['headline'][:80]}...")
+
+
+# ─────────────────────────────────────────────────────────────
 # SUMMARY
 # ─────────────────────────────────────────────────────────────
 section("Summary")
-print("  11 search methods demonstrated:")
+print("  13 search methods demonstrated:")
 print("    search()               — full-text search with ranking and highlighting")
 print("    search_fuzzy()         — typo-tolerant matching ('Alic' → 'Alice')")
 print("    search_phonetic()      — sound-alike matching ('Smyth' → 'Smith')")
@@ -201,6 +224,8 @@ print("    create_search_config() — custom text search configurations")
 print("    percolate_add()        — register queries for reverse matching")
 print("    percolate()            — match documents against stored queries")
 print("    percolate_delete()     — remove stored queries")
+print("    analyze()              — tokenization pipeline (debug search configs)")
+print("    explain_score()        — score breakdown for a specific document")
 print("\n  No Elasticsearch. No Solr. No sync pipeline.")
 print("  Just PostgreSQL.")
 
