@@ -159,10 +159,37 @@ print(f"  search(..., lang='my_search') → {len(results)} results")
 
 
 # ─────────────────────────────────────────────────────────────
+# 9. PERCOLATOR (reverse search)
+# ─────────────────────────────────────────────────────────────
+section("9. Percolator — Reverse Search")
+
+goldlapel.percolate_add(conn, "alerts", "k8s-security",
+    "kubernetes security vulnerability")
+goldlapel.percolate_add(conn, "alerts", "python-release",
+    "python new release")
+goldlapel.percolate_add(conn, "alerts", "pg-perf",
+    "database performance optimization",
+    metadata={"priority": "high", "team": "backend"})
+print("  registered 3 alert queries")
+
+matches = goldlapel.percolate(conn, "alerts",
+    "A critical kubernetes security vulnerability was discovered in production clusters today")
+print(f"\n  percolate(document) → {len(matches)} matching alerts:")
+for m in matches:
+    print(f"    [{m['_score']:.4f}] {m['query_id']}: {m['query_text']}")
+
+deleted = goldlapel.percolate_delete(conn, "alerts", "k8s-security")
+print(f"\n  percolate_delete('k8s-security') → {deleted}")
+
+not_found = goldlapel.percolate_delete(conn, "alerts", "nonexistent")
+print(f"  percolate_delete('nonexistent') → {not_found}")
+
+
+# ─────────────────────────────────────────────────────────────
 # SUMMARY
 # ─────────────────────────────────────────────────────────────
 section("Summary")
-print("  8 search methods demonstrated:")
+print("  11 search methods demonstrated:")
 print("    search()               — full-text search with ranking and highlighting")
 print("    search_fuzzy()         — typo-tolerant matching ('Alic' → 'Alice')")
 print("    search_phonetic()      — sound-alike matching ('Smyth' → 'Smith')")
@@ -171,6 +198,9 @@ print("    similar()              — vector similarity (requires embeddings)")
 print("    facets()               — terms aggregation with search filtering")
 print("    aggregate()            — metric aggregations (count, sum, avg, min, max)")
 print("    create_search_config() — custom text search configurations")
+print("    percolate_add()        — register queries for reverse matching")
+print("    percolate()            — match documents against stored queries")
+print("    percolate_delete()     — remove stored queries")
 print("\n  No Elasticsearch. No Solr. No sync pipeline.")
 print("  Just PostgreSQL.")
 
