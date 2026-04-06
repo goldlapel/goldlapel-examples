@@ -16,6 +16,10 @@ conn = goldlapel.start(UPSTREAM, config={
 
 # --- Schema setup ---
 
+conn.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+conn.execute("CREATE EXTENSION IF NOT EXISTS fuzzystrmatch")
+
+conn.execute("DROP TABLE IF EXISTS articles CASCADE")
 conn.execute("DROP TABLE IF EXISTS order_items CASCADE")
 conn.execute("DROP TABLE IF EXISTS orders CASCADE")
 conn.execute("DROP TABLE IF EXISTS products CASCADE")
@@ -84,8 +88,33 @@ for i in range(1, 201):
         ((i % 100) + 1, (i % 20) + 1, (i % 5) + 1, round(10 + i * 2.2, 2)),
     )
 
+conn.execute("""
+    CREATE TABLE articles (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        body TEXT NOT NULL
+    )
+""")
+
+articles = [
+    ("Introduction to PostgreSQL", "PostgreSQL is a powerful open source relational database system with over 35 years of active development. It runs on all major operating systems and has earned a strong reputation for reliability and performance."),
+    ("Understanding Indexes", "Database indexes are data structures that improve the speed of data retrieval operations. Without indexes, the database must scan every row in a table to find matching results."),
+    ("Full-Text Search in Postgres", "PostgreSQL provides built-in full-text search capabilities using tsvector and tsquery types. This eliminates the need for external search engines like Elasticsearch for many use cases."),
+    ("Query Optimization Techniques", "Optimizing database queries involves analyzing execution plans, adding appropriate indexes, and restructuring queries to reduce I/O operations and CPU usage."),
+    ("Connection Pooling Best Practices", "Connection pooling reduces the overhead of establishing database connections. Tools like PgBouncer and built-in connection pools help manage database resources efficiently."),
+    ("Materialized Views Explained", "Materialized views store the result of a query physically on disk. They are useful for expensive aggregate queries that don't need real-time data freshness."),
+    ("Postgres Replication Guide", "Streaming replication in PostgreSQL creates exact copies of a database server. This provides high availability and read scaling for production workloads."),
+    ("Advanced JSON Operations", "PostgreSQL supports JSON and JSONB data types with powerful operators for querying nested documents. JSONB is stored in a binary format for faster processing."),
+    ("Database Security Hardening", "Securing a PostgreSQL installation involves configuring authentication, encrypting connections with SSL, and implementing role-based access control."),
+    ("Monitoring Postgres Performance", "Effective monitoring tracks query latency, connection counts, cache hit ratios, and disk I/O. Extensions like pg_stat_statements provide detailed query analytics."),
+]
+for title, body in articles:
+    conn.execute(
+        "INSERT INTO articles (title, body) VALUES (%s, %s)", (title, body)
+    )
+
 conn.commit()
-print("Schema created: customers(50), products(20), orders(100), order_items(200)\n")
+print("Schema created: customers(50), products(20), orders(100), order_items(200), articles(10)\n")
 
 
 def section(title):
@@ -262,6 +291,64 @@ for wid, count in sorted(coalesce_results):
     print(f"  worker {wid}: {count} customers")
 print("All 3 got the same result, but GL only executed the query once.")
 time.sleep(4)
+
+
+# ─────────────────────────────────────────────────────────────
+# 12. EXPRESSION REWRITING — TSVECTOR STORED COLUMNS
+# ─────────────────────────────────────────────────────────────
+section("12. Expression Rewriting — Tsvector Stored Columns")
+print("Sending full-text search queries on articles.body...")
+print("GL will auto-create a stored tsvector column (_gl_tsv_body) so Postgres")
+print("doesn't recompute to_tsvector() on every row at query time.\n")
+
+tsv_query = "SELECT * FROM articles WHERE to_tsvector('english', body) @@ plainto_tsquery('english', %s)"
+
+t0 = time.perf_counter()
+for i in range(5):
+    rows = conn.execute(tsv_query, ("PostgreSQL",)).fetchall()
+    print(f"  run {i+1}: {len(rows)} rows")
+tsv_before = time.perf_counter() - t0
+
+print(f"\n  Before (5 runs): {tsv_before:.4f}s")
+print("  Waiting 5s for GL to create stored tsvector column...")
+time.sleep(5)
+
+t0 = time.perf_counter()
+rows = conn.execute(tsv_query, ("PostgreSQL",)).fetchall()
+tsv_after = time.perf_counter() - t0
+
+print(f"  After  (1 run):  {tsv_after:.4f}s — {len(rows)} rows")
+print("  GL added a stored column _gl_tsv_body with a GIN index.")
+print("  The query is transparently rewritten to use the pre-computed column.")
+
+
+# ─────────────────────────────────────────────────────────────
+# 13. EXPRESSION REWRITING — SIMILARITY % OPERATOR
+# ─────────────────────────────────────────────────────────────
+section("13. Expression Rewriting — Similarity % Operator")
+print("Sending similarity() queries on articles.title...")
+print("GL rewrites similarity(col, val) > threshold to col % val,")
+print("which can use the GIN trigram index for fast fuzzy matching.\n")
+
+sim_query = "SELECT * FROM articles WHERE similarity(title, %s) > 0.3"
+
+t0 = time.perf_counter()
+for i in range(5):
+    rows = conn.execute(sim_query, ("Postgres Guide",)).fetchall()
+    print(f"  run {i+1}: {len(rows)} rows")
+sim_before = time.perf_counter() - t0
+
+print(f"\n  Before (5 runs): {sim_before:.4f}s")
+print("  Waiting 5s for GL to create trigram index and rewrite rule...")
+time.sleep(5)
+
+t0 = time.perf_counter()
+rows = conn.execute(sim_query, ("Postgres Guide",)).fetchall()
+sim_after = time.perf_counter() - t0
+
+print(f"  After  (1 run):  {sim_after:.4f}s — {len(rows)} rows")
+print("  GL created a GIN trigram index on articles.title and rewrites")
+print("  similarity(title, val) > 0.3 → title % val (index-friendly operator).")
 
 
 # ─────────────────────────────────────────────────────────────
