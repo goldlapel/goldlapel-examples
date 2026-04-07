@@ -21,7 +21,7 @@ Change GL's configuration without restarting the proxy. GL polls its config file
 
 ## What to look for
 
-The app starts GL with a config file set to `mode = "butler"` and `min_pattern_count = 10`. After a couple of seconds, it overwrites the file with `mode = "bellhop"` and `min_pattern_count = 3`.
+The app starts GL with a config file set to `mode = "waiter"` and `min_pattern_count = 10`. After a couple of seconds, it overwrites the file with `mode = "bellhop"` and `min_pattern_count = 3`.
 
 GL detects the change on its next poll cycle (up to 30 seconds) and applies the new values without dropping connections or restarting.
 

@@ -7,7 +7,7 @@ config_dir = tempfile.mkdtemp()
 config_path = os.path.join(config_dir, "goldlapel.toml")
 
 with open(config_path, "w") as f:
-    f.write('mode = "butler"\n\n[thresholds]\nmin_pattern_count = 10\n')
+    f.write('mode = "waiter"\n\n[thresholds]\nmin_pattern_count = 10\n')
 
 print(f"Config file: {config_path}")
 
@@ -15,7 +15,7 @@ conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
     "config": config_path,
 })
 
-print("Started in butler mode with min_pattern_count=10")
+print("Started in waiter mode with min_pattern_count=10")
 time.sleep(2)
 
 with open(config_path, "w") as f:

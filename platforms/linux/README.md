@@ -55,7 +55,7 @@ Install GL as a local binary and proxy a FastAPI todo app through it.
 | PUT | `/todos/{id}?completed=true` | Update todo |
 | DELETE | `/todos/{id}` | Delete todo |
 
-## Bellhop vs butler mode
+## Bellhop vs waiter mode
 
 The 6 read endpoints generate repeating query patterns. In **bellhop mode** (the default), GL will:
 
@@ -65,16 +65,16 @@ The 6 read endpoints generate repeating query patterns. In **bellhop mode** (the
 
 GL does not create indexes, materialized views, or rewrite queries in bellhop mode. It watches and reports.
 
-To have GL **actively optimize** your database (create indexes, materialized views, and rewrite queries), start it in **butler mode**:
+To have GL **actively optimize** your database (create indexes, materialized views, and rewrite queries), start it in **waiter mode**:
 
 ```bash
 ./target/release/goldlapel \
     --upstream postgres://gl:gl@localhost:5432/todos \
     --proxy-port 7932 \
-    --mode butler
+    --mode waiter
 ```
 
-Butler mode requires a license or active trial. With butler mode enabled, GL will:
+Waiter mode requires a license or active trial. With waiter mode enabled, GL will:
 
 - Create **covering indexes** (btree on `completed`, `id`) so Postgres can do index-only scans
 - Create a **trigram index** on `title` for the `ILIKE %...%` search pattern
