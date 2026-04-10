@@ -1,0 +1,19 @@
+{
+  "name": "goldlapel-sveltekit-example",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@goldlapel/goldlapel": "latest",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "^2.0.0",
+    "@sveltejs/kit": "^2.0.0",
+    "svelte": "^4.0.0",
+    "vite": "^5.0.0"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "goldlapel-express-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@goldlapel/goldlapel": "latest",
+    "express": "^4.21.0",
+    "pg": "^8.20.0"
+  }
+}
