@@ -1,4 +1,4 @@
-import { withGoldLapel, stop } from 'goldlapel-prisma'
+import { withGoldLapel, stop } from '@goldlapel/prisma'
 
 const prisma = await withGoldLapel({ url: 'postgres://gl:gl@localhost:5432/todos' })
 

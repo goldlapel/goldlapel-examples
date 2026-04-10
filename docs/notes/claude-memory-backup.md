@@ -38,13 +38,7 @@ Restore by copying these files back into the memory directory on a new machine.
 - `goldlapel/goldlapel-php` — Composer/Packagist wrapper (PHP, 19 tests)
 - `goldlapel/goldlapel-go` — Go module wrapper
 - `goldlapel/goldlapel-dotnet` — NuGet wrapper (C#, 23 tests, xUnit, netstandard2.0)
-- `goldlapel/goldlapel-django` — Django database backend plugin (Python, pyproject.toml)
-- `goldlapel/goldlapel-rails` — Rails plugin
-- `goldlapel/goldlapel-laravel` — Laravel plugin
-- `goldlapel/goldlapel-spring-boot` — Spring Boot plugin
-- `goldlapel/goldlapel-prisma` — Prisma ORM plugin (ESM, 16 tests, node:test)
-- `goldlapel/goldlapel-sqlalchemy` — SQLAlchemy ORM plugin (Python, 23 tests, pytest)
-- `goldlapel/goldlapel-drizzle` — Drizzle ORM plugin (ESM, 18 tests, node:test)
+- Plugins (Django, Rails, Laravel, Spring Boot, Prisma, SQLAlchemy, Drizzle) are now consolidated into their respective language wrapper packages
 - `goldlapel/goldlapel-hq — website + API + comms hub
 - `goldlapel/homebrew-tap` — Homebrew tap (public, auto-generated formula)
 

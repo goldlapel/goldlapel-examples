@@ -1,4 +1,4 @@
-import { drizzle, stop } from 'goldlapel-drizzle'
+import { drizzle, stop } from '@goldlapel/drizzle'
 import { todos } from './schema.js'
 import { asc } from 'drizzle-orm'
 import { sql } from 'drizzle-orm'

@@ -1,4 +1,4 @@
-import goldlapel from 'goldlapel'
+import goldlapel from '@goldlapel/goldlapel'
 
 const conn = await goldlapel.start('postgres://gl:gl@localhost:5432/todos')
 

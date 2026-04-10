@@ -22,7 +22,7 @@ Use the GL wrapper package for your language.
 | Example | Install |
 |---------|---------|
 | [languages/python](languages/python/) | `pip install goldlapel` |
-| [languages/javascript](languages/javascript/) | `npm install goldlapel` |
+| [languages/javascript](languages/javascript/) | `npm install @goldlapel/goldlapel` |
 | [languages/ruby](languages/ruby/) | `gem install goldlapel` |
 | [languages/go](languages/go/) | `go get github.com/goldlapel/goldlapel-go` |
 | [languages/java](languages/java/) | `com.goldlapel:goldlapel` (Maven) |
@@ -36,7 +36,7 @@ Zero-config framework plugins.
 | Example | Integration |
 |---------|-------------|
 | [frameworks/django](frameworks/django/) | Swap `ENGINE` to `django_goldlapel` |
-| [frameworks/rails](frameworks/rails/) | Add `gem "goldlapel-rails"` |
+| [frameworks/rails](frameworks/rails/) | Add `gem "goldlapel"` |
 | [frameworks/laravel](frameworks/laravel/) | Auto-discovered service provider |
 | [frameworks/spring-boot](frameworks/spring-boot/) | Add the starter dependency |
 
@@ -46,9 +46,9 @@ ORM-level plugins that intercept the connection layer.
 
 | Example | Integration |
 |---------|-------------|
-| [orms/sqlalchemy](orms/sqlalchemy/) | `from goldlapel_sqlalchemy import create_engine` |
+| [orms/sqlalchemy](orms/sqlalchemy/) | `from goldlapel.sqlalchemy import create_engine` |
 | [orms/prisma](orms/prisma/) | `withGoldLapel()` wraps PrismaClient |
-| [orms/drizzle](orms/drizzle/) | `drizzle()` from `goldlapel-drizzle` |
+| [orms/drizzle](orms/drizzle/) | `drizzle()` from `@goldlapel/drizzle` |
 
 ## Features
 

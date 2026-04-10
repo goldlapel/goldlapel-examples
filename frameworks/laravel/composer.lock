@@ -620,16 +620,16 @@
             "time": "2026-03-21T11:04:01+00:00"
         },
         {
-            "name": "goldlapel/goldlapel-laravel",
+            "name": "goldlapel/goldlapel",
             "version": "v0.1.0-rc6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/goldlapel/goldlapel-laravel.git",
+                "url": "https://github.com/goldlapel/goldlapel.git",
                 "reference": "6a3c8a13a4d2b03979100b37b57ce5bbcf90a7a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goldlapel/goldlapel-laravel/zipball/6a3c8a13a4d2b03979100b37b57ce5bbcf90a7a2",
+                "url": "https://api.github.com/repos/goldlapel/goldlapel/zipball/6a3c8a13a4d2b03979100b37b57ce5bbcf90a7a2",
                 "reference": "6a3c8a13a4d2b03979100b37b57ce5bbcf90a7a2",
                 "shasum": ""
             },
@@ -664,8 +664,8 @@
             ],
             "description": "Laravel service provider for Gold Lapel — self-optimizing Postgres proxy",
             "support": {
-                "issues": "https://github.com/goldlapel/goldlapel-laravel/issues",
-                "source": "https://github.com/goldlapel/goldlapel-laravel/tree/v0.1.0-rc6"
+                "issues": "https://github.com/goldlapel/goldlapel/issues",
+                "source": "https://github.com/goldlapel/goldlapel/tree/v0.1.0-rc6"
             },
             "time": "2026-03-16T08:51:06+00:00"
         },

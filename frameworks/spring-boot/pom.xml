@@ -35,7 +35,7 @@
         </dependency>
         <dependency>
             <groupId>com.goldlapel</groupId>
-            <artifactId>goldlapel-spring-boot-starter</artifactId>
+            <artifactId>goldlapel</artifactId>
             <version>0.1.0-rc15</version>
         </dependency>
     </dependencies>

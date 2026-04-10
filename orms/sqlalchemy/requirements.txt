@@ -1,2 +1,2 @@
-goldlapel-sqlalchemy
+goldlapel[sqlalchemy]
 psycopg[binary]

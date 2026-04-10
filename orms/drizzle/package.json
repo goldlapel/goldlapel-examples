@@ -4,8 +4,8 @@
   "type": "module",
   "dependencies": {
     "drizzle-orm": "latest",
-    "goldlapel": "latest",
-    "goldlapel-drizzle": "latest",
+    "@goldlapel/goldlapel": "latest",
+    "@goldlapel/drizzle": "latest",
     "pg": "^8.20.0"
   }
 }

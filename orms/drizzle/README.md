@@ -1,6 +1,6 @@
 # Gold Lapel — Drizzle
 
-Drop-in Drizzle integration — import `drizzle` from `goldlapel-drizzle` instead of `drizzle-orm`.
+Drop-in Drizzle integration — import `drizzle` from `@goldlapel/drizzle` instead of `drizzle-orm`.
 
 ## Setup
 

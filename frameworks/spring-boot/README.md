@@ -21,4 +21,4 @@ One-dependency Spring Boot integration — auto-configures HikariCP.
 
 ## What to look for
 
-GL starts automatically when Spring Boot connects to the database. The only GL-specific change is the `goldlapel-spring-boot-starter` dependency in `pom.xml` — it auto-configures HikariCP. Everything else is standard Spring Boot. Check the dashboard at http://localhost:7933 to see what GL found.
+GL starts automatically when Spring Boot connects to the database. The only GL-specific change is the `goldlapel` dependency in `pom.xml` — it auto-configures HikariCP. Everything else is standard Spring Boot. Check the dashboard at http://localhost:7933 to see what GL found.
