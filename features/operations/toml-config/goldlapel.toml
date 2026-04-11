@@ -1,0 +1,73 @@
+# Gold Lapel Configuration
+# All settings have sensible defaults — only override what you need.
+
+upstream = "postgres://postgres:password@localhost:5432/mydb"
+proxy_port = 7932
+mode = "waiter"           # "waiter" (full optimization) or "bellhop" (observe only)
+
+# ─── L1 · Native Cache ──────────────────────────────────────
+# In-process cache in language wrappers. Sub-microsecond reads.
+# [l1]
+# enabled = true
+# cache_size = 32768
+
+# ─── L2 · Proxy Cache ───────────────────────────────────────
+# Result cache and batch cache at the proxy level.
+# [l2]
+# enabled = true
+# result_cache_size = 65536
+# batch_cache_size = 64
+# batch_cache_ttl_secs = 300
+# prepared_cache_size = 1024
+
+# ─── L3 · Materialized Views & Indexes ──────────────────────
+# Automatic materialized view creation and index optimization.
+[l3]
+enabled = true
+min_pattern_count = 3       # Queries seen this many times before creating a matview
+refresh_interval_secs = 60  # How often to check for new patterns
+# consolidation = true
+# shadow_verification = true
+# max_tables_per_view = 6
+# max_columns_per_view = 30
+
+# [l3.indexes]
+# btree = true
+# trigram = true
+# tsvector = true
+# fuzzymatch = true
+# pgvector = true
+# expression = true
+# partial = true
+
+# ─── SQL Optimizations ──────────────────────────────────────
+[sql]
+# rewriting = true          # Transparent query rewriting
+# coalescing = false        # Deduplicate identical concurrent queries
+# async_commit = false      # SET synchronous_commit = off (~5x write speedup)
+# copy_threshold = 50       # Min rows for COPY rewrite
+# deep_pagination_threshold = 1000
+
+# [sql.n1]
+# enabled = true
+# threshold = 5             # Per-connection N+1 detection threshold
+# window_ms = 500           # Sliding window for N+1 detection
+# cross_connection = true
+# cross_threshold = 10
+
+# ─── Connection Pooling ─────────────────────────────────────
+[pool]
+enabled = true
+size = 20
+timeout_secs = 30
+# mode = "session"          # "session" or "transaction"
+
+# ─── Exclusions ─────────────────────────────────────────────
+# [exclude]
+# tables = ["migrations", "sessions", "pg_stat_statements"]
+
+# ─── TLS ────────────────────────────────────────────────────
+# [tls]
+# cert = "/path/to/server.crt"
+# key = "/path/to/server.key"
+# client_ca = "/path/to/ca.crt"   # Mutual TLS (mTLS)
