@@ -1,9 +1,27 @@
 # Gold Lapel Configuration
 # All settings have sensible defaults — only override what you need.
 
+# ─── Before We Begin ────────────────────────────────────────
+# These three settings are worth understanding before going live.
+#
+# mode: "waiter" optimizes automatically. "bellhop" passes queries
+#   through unmodified — useful for auditing or if you need to
+#   bypass optimizations temporarily.
+#
+# wal_level: If writes reach your database outside the proxy
+#   (migrations, direct queries, companion services), set
+#   wal_level = logical in postgresql.conf so the Waiter can
+#   detect them. Otherwise, clear caches manually via the
+#   dashboard after direct database writes.
+#
+# mgmt_idle_timeout_secs: Serverless providers (Neon, Supabase)
+#   bill for idle connections. Set a timeout to avoid unexpected
+#   charges. Gold Lapel auto-detects most providers and sets 60s.
+# ─────────────────────────────────────────────────────────────
+
 upstream = "postgres://postgres:password@localhost:5432/mydb"
 proxy_port = 7932
-mode = "waiter"           # "waiter" (full optimization) or "bellhop" (observe only)
+mode = "waiter"           # "waiter" (full optimization) or "bellhop" (passthrough)
 
 # ─── L1 · Native Cache ──────────────────────────────────────
 # In-process cache in language wrappers. Sub-microsecond reads.
