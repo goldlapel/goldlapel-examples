@@ -1,6 +1,6 @@
 # Gold Lapel — SQLAlchemy
 
-Drop-in SQLAlchemy integration — import from `goldlapel_sqlalchemy` instead of `sqlalchemy`.
+Drop-in SQLAlchemy integration — import from `goldlapel.sqlalchemy` instead of `sqlalchemy`.
 
 ## Setup
 

@@ -1,4 +1,4 @@
-from goldlapel_sqlalchemy import create_engine, stop
+from goldlapel.sqlalchemy import create_engine, stop
 from sqlalchemy import text
 
 engine = create_engine("postgresql+psycopg://gl:gl@localhost:5432/todos")
