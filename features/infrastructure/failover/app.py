@@ -1,9 +1,10 @@
 import goldlapel
 import time
 
-conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+gl = goldlapel.GoldLapel("postgres://gl:gl@localhost:5432/todos", config={
     "fallback": "postgres://gl:gl@localhost:5433/todos",
 })
+conn = gl.start()
 
 time.sleep(2)
 
@@ -19,7 +20,7 @@ input(">>> Press Enter after stopping the primary...")
 print("\n=== Reading after failover ===")
 for attempt in range(5):
     try:
-        c = goldlapel.connect()
+        c = gl.connect()
         recovery = c.execute("SELECT pg_is_in_recovery()").fetchone()[0]
         rows = c.execute("SELECT id, title, done FROM todos ORDER BY id").fetchall()
         print(f"  Connected (recovery mode: {recovery}), {len(rows)} todo(s):")
@@ -31,4 +32,4 @@ for attempt in range(5):
         print(f"  Attempt {attempt + 1}: {e}")
         time.sleep(1)
 
-goldlapel.stop()
+gl.stop()

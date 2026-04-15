@@ -5,7 +5,7 @@ import goldlapel
 
 UPSTREAM = "postgres://gl:gl@localhost:5432/todos"
 
-conn = goldlapel.start(UPSTREAM, config={
+gl = goldlapel.GoldLapel(UPSTREAM, config={
     "min_pattern_count": 3,
     "report_interval_secs": 3,
     "n1_threshold": 5,
@@ -13,6 +13,7 @@ conn = goldlapel.start(UPSTREAM, config={
     "enable_coalescing": True,
     "deep_pagination_threshold": 100,
 })
+conn = gl.start()
 
 # --- Schema setup ---
 
@@ -274,7 +275,7 @@ coalesce_results = []
 
 def coalesce_worker(worker_id):
     try:
-        c = goldlapel.connect()
+        c = gl.connect()
         row = c.execute("SELECT pg_sleep(0.5)::text, COUNT(*)::text FROM customers").fetchone()
         coalesce_results.append((worker_id, row[1]))
         c.close()
@@ -378,4 +379,4 @@ except Exception as e:
 print(f"\nDashboard: http://localhost:7933")
 
 conn.close()
-goldlapel.stop()
+gl.stop()

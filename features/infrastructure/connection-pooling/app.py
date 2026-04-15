@@ -6,15 +6,16 @@ mode = sys.argv[1] if len(sys.argv) > 1 else "transaction"
 pool_size = int(sys.argv[2]) if len(sys.argv) > 2 else 20
 print(f"Pool mode: {mode}, pool_size: {pool_size}")
 
-conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+gl = goldlapel.GoldLapel("postgres://gl:gl@localhost:5432/todos", config={
     "pool_mode": mode,
     "pool_size": pool_size,
 })
-conn.close()
+gl.start()
+
 
 pids = []
 for i in range(10):
-    conn = goldlapel.connect()
+    conn = gl.connect()
     pid = conn.execute("SELECT pg_backend_pid()").fetchone()[0]
     pids.append(pid)
     print(f"  connection {i+1}: backend pid {pid}")
@@ -25,4 +26,4 @@ unique = len(set(pids))
 print(f"\n{unique} unique backend PIDs across 10 sequential connections")
 print(f"Pool mode: {mode} — {'connections reused between transactions' if mode == 'transaction' else 'each session pinned to its own backend'}")
 
-goldlapel.stop()
+gl.stop()

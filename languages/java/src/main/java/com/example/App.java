@@ -5,7 +5,8 @@ import java.sql.*;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        try (Connection conn = GoldLapel.start("postgres://gl:gl@localhost:5432/todos")) {
+        GoldLapel gl = new GoldLapel("postgres://gl:gl@localhost:5432/todos");
+        try (Connection conn = gl.start()) {
             conn.createStatement().execute(
                 "CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)");
 
@@ -25,7 +26,7 @@ public class App {
                     rs.getInt("id"), rs.getString("title"), rs.getBoolean("done"));
             }
         } finally {
-            GoldLapel.stop();
+            gl.stop();
         }
     }
 }

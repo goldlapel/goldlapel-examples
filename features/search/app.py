@@ -2,7 +2,8 @@ import goldlapel
 
 UPSTREAM = "postgres://gl:gl@localhost:5432/todos"
 
-conn = goldlapel.start(UPSTREAM)
+gl = goldlapel.GoldLapel(UPSTREAM)
+conn = gl.start()
 
 
 def section(title):
@@ -50,13 +51,13 @@ print("Created articles table with 10 rows.\n")
 # ─────────────────────────────────────────────────────────────
 section("1. Full-Text Search — search()")
 
-results = goldlapel.search(conn, "articles", "body", "database performance")
+results = gl.search("articles", "body", "database performance")
 print(f"  search('articles', 'body', 'database performance') → {len(results)} results:")
 for r in results:
     print(f"    [{r['_score']:.4f}] {r['title']}")
 
 print()
-results = goldlapel.search(conn, "articles", ["title", "body"], "PostgreSQL", highlight=True)
+results = gl.search("articles", ["title", "body"], "PostgreSQL", highlight=True)
 print(f"  multi-column search with highlights → {len(results)} results:")
 for r in results:
     highlight = r.get("_highlight", "")[:80]
@@ -70,7 +71,7 @@ for r in results:
 # ─────────────────────────────────────────────────────────────
 section("2. Fuzzy Search — search_fuzzy()")
 
-results = goldlapel.search_fuzzy(conn, "articles", "author", "Alic", threshold=0.2)
+results = gl.search_fuzzy("articles", "author", "Alic", threshold=0.2)
 print(f"  search_fuzzy('articles', 'author', 'Alic') → {len(results)} results:")
 for r in results:
     print(f"    [{r['_score']:.2f}] {r['author']} — {r['title']}")
@@ -81,7 +82,7 @@ for r in results:
 # ─────────────────────────────────────────────────────────────
 section("3. Phonetic Search — search_phonetic()")
 
-results = goldlapel.search_phonetic(conn, "articles", "author", "Smyth")
+results = gl.search_phonetic("articles", "author", "Smyth")
 print(f"  search_phonetic('articles', 'author', 'Smyth') → {len(results)} results:")
 for r in results:
     print(f"    [{r['_score']:.2f}] {r['author']} — {r['title']}")
@@ -93,7 +94,7 @@ print("  'Smyth' matches 'Smith' via soundex phonetic matching.")
 # ─────────────────────────────────────────────────────────────
 section("4. Autocomplete — suggest()")
 
-results = goldlapel.suggest(conn, "articles", "title", "Post")
+results = gl.suggest("articles", "title", "Post")
 print(f"  suggest('articles', 'title', 'Post') → {len(results)} results:")
 for r in results:
     print(f"    [{r['_score']:.2f}] {r['title']}")
@@ -108,7 +109,7 @@ print("  Vector search requires embeddings from an AI model (OpenAI, Cohere, etc
 print("  Gold Lapel indexes the vectors — your application generates them.\n")
 print("  Example (pseudo-code):")
 print("    embedding = openai.embed('database optimization')")
-print("    results = goldlapel.similar(conn, 'articles', 'embedding', embedding)")
+print("    results = gl.similar('articles', 'embedding', embedding)")
 print("\n  Skipping live demo — requires a vector column with real embeddings.")
 print("  See docs/extensions for pgvector setup instructions.")
 
@@ -119,13 +120,13 @@ print("  See docs/extensions for pgvector setup instructions.")
 section("6. Faceted Search — facets()")
 
 # Facets without filter
-facet_counts = goldlapel.facets(conn, "articles", "author")
+facet_counts = gl.facets("articles", "author")
 print("  facets('articles', 'author') → value counts:")
 for f in facet_counts:
     print(f"    {f['value']}: {f['count']}")
 
 # Facets with search filter
-filtered = goldlapel.facets(conn, "articles", "author",
+filtered = gl.facets("articles", "author",
     query="PostgreSQL", query_column="body")
 print(f"\n  facets(..., query='PostgreSQL') → {len(filtered)} authors match:")
 for f in filtered:
@@ -137,10 +138,10 @@ for f in filtered:
 # ─────────────────────────────────────────────────────────────
 section("7. Aggregations — aggregate()")
 
-total = goldlapel.aggregate(conn, "articles", "id", "count")
+total = gl.aggregate("articles", "id", "count")
 print(f"  aggregate('articles', 'id', 'count') → {total[0]['value']}")
 
-by_author = goldlapel.aggregate(conn, "articles", "id", "count", group_by="author")
+by_author = gl.aggregate("articles", "id", "count", group_by="author")
 print("  aggregate(..., 'count', group_by='author'):")
 for row in by_author:
     print(f"    {row['author']}: {row['value']}")
@@ -151,10 +152,10 @@ for row in by_author:
 # ─────────────────────────────────────────────────────────────
 section("8. Custom Search Config — create_search_config()")
 
-goldlapel.create_search_config(conn, "my_search", copy_from="english")
+gl.create_search_config("my_search", copy_from="english")
 print("  created config 'my_search' (copy of english)")
 
-results = goldlapel.search(conn, "articles", "body", "database", lang="my_search")
+results = gl.search("articles", "body", "database", lang="my_search")
 print(f"  search(..., lang='my_search') → {len(results)} results")
 
 
@@ -163,25 +164,25 @@ print(f"  search(..., lang='my_search') → {len(results)} results")
 # ─────────────────────────────────────────────────────────────
 section("9. Percolator — Reverse Search")
 
-goldlapel.percolate_add(conn, "alerts", "k8s-security",
+gl.percolate_add("alerts", "k8s-security",
     "kubernetes security vulnerability")
-goldlapel.percolate_add(conn, "alerts", "python-release",
+gl.percolate_add("alerts", "python-release",
     "python new release")
-goldlapel.percolate_add(conn, "alerts", "pg-perf",
+gl.percolate_add("alerts", "pg-perf",
     "database performance optimization",
     metadata={"priority": "high", "team": "backend"})
 print("  registered 3 alert queries")
 
-matches = goldlapel.percolate(conn, "alerts",
+matches = gl.percolate("alerts",
     "A critical kubernetes security vulnerability was discovered in production clusters today")
 print(f"\n  percolate(document) → {len(matches)} matching alerts:")
 for m in matches:
     print(f"    [{m['_score']:.4f}] {m['query_id']}: {m['query_text']}")
 
-deleted = goldlapel.percolate_delete(conn, "alerts", "k8s-security")
+deleted = gl.percolate_delete("alerts", "k8s-security")
 print(f"\n  percolate_delete('k8s-security') → {deleted}")
 
-not_found = goldlapel.percolate_delete(conn, "alerts", "nonexistent")
+not_found = gl.percolate_delete("alerts", "nonexistent")
 print(f"  percolate_delete('nonexistent') → {not_found}")
 
 
@@ -190,17 +191,17 @@ print(f"  percolate_delete('nonexistent') → {not_found}")
 # ─────────────────────────────────────────────────────────────
 section("10. Relevance Tuning — analyze() / explain_score()")
 
-tokens = goldlapel.analyze(conn, "The quick brown foxes jumped")
+tokens = gl.analyze("The quick brown foxes jumped")
 print("  analyze('The quick brown foxes jumped'):")
 for t in tokens:
     if t['lexemes']:
         print(f"    '{t['token']}' → {t['lexemes']}  ({t['alias']})")
 
 print()
-first_article = goldlapel.search(conn, "articles", "body", "database", limit=1)
+first_article = gl.search("articles", "body", "database", limit=1)
 if first_article:
     aid = first_article[0]['id']
-    explanation = goldlapel.explain_score(conn, "articles", "body", "database", "id", aid)
+    explanation = gl.explain_score("articles", "body", "database", "id", aid)
     print(f"  explain_score(article {aid}, 'database'):")
     print(f"    matches:         {explanation['matches']}")
     print(f"    score:           {explanation['score']:.6f}")
@@ -230,4 +231,4 @@ print("\n  No Elasticsearch. No Solr. No sync pipeline.")
 print("  Just PostgreSQL.")
 
 conn.close()
-goldlapel.stop()
+gl.stop()

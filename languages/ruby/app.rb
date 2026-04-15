@@ -1,6 +1,7 @@
 require "goldlapel"
 
-conn = GoldLapel.start("postgres://gl:gl@localhost:5432/todos")
+gl = GoldLapel.new("postgres://gl:gl@localhost:5432/todos")
+conn = gl.start
 
 conn.exec("CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)")
 conn.exec_params("INSERT INTO todos (title) VALUES ($1)", ["Try Gold Lapel"])
@@ -11,4 +12,4 @@ conn.exec("SELECT id, title, done FROM todos ORDER BY id") do |result|
 end
 
 conn.close
-GoldLapel.stop
+gl.stop

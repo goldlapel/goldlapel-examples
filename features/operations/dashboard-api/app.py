@@ -3,7 +3,8 @@ import json
 import urllib.request
 import goldlapel
 
-conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos")
+gl = goldlapel.GoldLapel("postgres://gl:gl@localhost:5432/todos")
+conn = gl.start()
 
 conn.execute("DROP TABLE IF EXISTS orders")
 conn.execute("DROP TABLE IF EXISTS customers")
@@ -74,4 +75,4 @@ print(f"  matviews:       {len(matviews)}")
 
 print("\nDashboard: http://localhost:7933")
 
-goldlapel.stop()
+gl.stop()

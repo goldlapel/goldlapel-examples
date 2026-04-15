@@ -1,6 +1,7 @@
-import goldlapel from '@goldlapel/goldlapel'
+import { GoldLapel } from '@goldlapel/goldlapel'
 
-const conn = await goldlapel.start('postgres://gl:gl@localhost:5432/todos')
+const gl = new GoldLapel('postgres://gl:gl@localhost:5432/todos')
+const conn = await gl.start()
 
 await conn.query('CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)')
 await conn.query('INSERT INTO todos (title) VALUES ($1)', ['Try Gold Lapel'])
@@ -10,4 +11,4 @@ const { rows } = await conn.query('SELECT id, title, done FROM todos ORDER BY id
 console.log(rows)
 
 await conn.end()
-goldlapel.stop()
+gl.stop()

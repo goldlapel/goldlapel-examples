@@ -11,9 +11,10 @@ with open(config_path, "w") as f:
 
 print(f"Config file: {config_path}")
 
-conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+gl = goldlapel.GoldLapel("postgres://gl:gl@localhost:5432/todos", config={
     "config": config_path,
 })
+conn = gl.start()
 
 print("Started in waiter mode with min_pattern_count=10")
 time.sleep(2)
@@ -31,4 +32,4 @@ print("Done — check dashboard to confirm mode changed to bellhop")
 print("Dashboard: http://localhost:7933")
 
 conn.close()
-goldlapel.stop()
+gl.stop()

@@ -1,10 +1,11 @@
 import time
 import goldlapel
 
-conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+gl = goldlapel.GoldLapel("postgres://gl:gl@localhost:5432/todos", config={
     "min_pattern_count": 3,
     "report_interval_secs": 3,
 })
+conn = gl.start()
 
 conn.execute("DROP TABLE IF EXISTS customers")
 conn.execute("""
@@ -40,4 +41,4 @@ print("The second query (with /* goldlapel:skip */) was completely invisible to 
 print("Dashboard: http://localhost:7933")
 
 conn.close()
-goldlapel.stop()
+gl.stop()

@@ -3,7 +3,8 @@ import goldlapel
 
 UPSTREAM = "postgres://gl:gl@localhost:5432/todos"
 
-conn = goldlapel.start(UPSTREAM)
+gl = goldlapel.GoldLapel(UPSTREAM)
+conn = gl.start()
 
 
 def section(title):
@@ -18,7 +19,7 @@ def section(title):
 section("1. Stream Add — append messages to a stream")
 
 for i in range(5):
-    msg_id = goldlapel.stream_add(conn, "events", {
+    msg_id = gl.stream_add("events", {
         "type": "page_view",
         "path": f"/products/{i+1}",
         "user_id": (i % 3) + 1,
@@ -31,10 +32,10 @@ for i in range(5):
 # ─────────────────────────────────────────────────────────────
 section("2. Create Consumer Group")
 
-goldlapel.stream_create_group(conn, "events", "analytics")
+gl.stream_create_group("events", "analytics")
 print("  created group 'analytics'")
 
-goldlapel.stream_create_group(conn, "events", "notifications")
+gl.stream_create_group("events", "notifications")
 print("  created group 'notifications'")
 
 
@@ -43,7 +44,7 @@ print("  created group 'notifications'")
 # ─────────────────────────────────────────────────────────────
 section("3. Stream Read — consume messages from a group")
 
-messages = goldlapel.stream_read(conn, "events", "analytics", "worker-1", count=3)
+messages = gl.stream_read("events", "analytics", "worker-1", count=3)
 print(f"  worker-1 read {len(messages)} messages:")
 for msg in messages:
     print(f"    id={msg['id']}, payload={msg['payload']}")
@@ -55,7 +56,7 @@ for msg in messages:
 section("4. Stream Ack — acknowledge processed messages")
 
 for msg in messages:
-    goldlapel.stream_ack(conn, "events", "analytics", msg["id"])
+    gl.stream_ack("events", "analytics", msg["id"])
     print(f"  acked message id={msg['id']}")
 
 
@@ -65,19 +66,19 @@ for msg in messages:
 section("5. Stream Claim — recover abandoned messages")
 
 # Read without acking (simulating a crashed worker)
-abandoned = goldlapel.stream_read(conn, "events", "analytics", "worker-2", count=2)
+abandoned = gl.stream_read("events", "analytics", "worker-2", count=2)
 print(f"  worker-2 read {len(abandoned)} messages (then 'crashed' without acking)")
 
 # Another worker claims the idle messages
 time.sleep(0.1)
-claimed = goldlapel.stream_claim(conn, "events", "analytics", "worker-3", min_idle_ms=50)
+claimed = gl.stream_claim("events", "analytics", "worker-3", min_idle_ms=50)
 print(f"  worker-3 claimed {len(claimed)} idle messages:")
 for msg in claimed:
     print(f"    id={msg['id']}, payload={msg['payload']}")
 
 # Ack the claimed messages
 for msg in claimed:
-    goldlapel.stream_ack(conn, "events", "analytics", msg["id"])
+    gl.stream_ack("events", "analytics", msg["id"])
     print(f"  worker-3 acked id={msg['id']}")
 
 
@@ -95,4 +96,4 @@ print("\n  Consumer groups, acknowledgment, crash recovery.")
 print("  No Redis Streams. Just PostgreSQL.")
 
 conn.close()
-goldlapel.stop()
+gl.stop()

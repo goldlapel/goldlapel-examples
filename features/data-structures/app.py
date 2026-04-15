@@ -5,7 +5,8 @@ import goldlapel
 
 UPSTREAM = "postgres://gl:gl@localhost:5432/todos"
 
-conn = goldlapel.start(UPSTREAM)
+gl = goldlapel.GoldLapel(UPSTREAM)
+conn = gl.start()
 
 
 def section(title):
@@ -19,13 +20,13 @@ def section(title):
 # ─────────────────────────────────────────────────────────────
 section("1. Counters — incr / get_counter")
 
-val = goldlapel.incr(conn, "page_views", "home")
+val = gl.incr("page_views", "home")
 print(f"  incr('page_views', 'home')     → {val}")
-val = goldlapel.incr(conn, "page_views", "home")
+val = gl.incr("page_views", "home")
 print(f"  incr('page_views', 'home')     → {val}")
-val = goldlapel.incr(conn, "page_views", "home", 10)
+val = gl.incr("page_views", "home", 10)
 print(f"  incr('page_views', 'home', 10) → {val}")
-val = goldlapel.get_counter(conn, "page_views", "home")
+val = gl.get_counter("page_views", "home")
 print(f"  get_counter('page_views', 'home') → {val}")
 
 
@@ -34,20 +35,20 @@ print(f"  get_counter('page_views', 'home') → {val}")
 # ─────────────────────────────────────────────────────────────
 section("2. Hashes — hset / hget / hgetall / hdel")
 
-goldlapel.hset(conn, "user_prefs", "user:1", "theme", "dark")
-goldlapel.hset(conn, "user_prefs", "user:1", "lang", "en")
-goldlapel.hset(conn, "user_prefs", "user:1", "timezone", "US/Eastern")
+gl.hset("user_prefs", "user:1", "theme", "dark")
+gl.hset("user_prefs", "user:1", "lang", "en")
+gl.hset("user_prefs", "user:1", "timezone", "US/Eastern")
 
-theme = goldlapel.hget(conn, "user_prefs", "user:1", "theme")
+theme = gl.hget("user_prefs", "user:1", "theme")
 print(f"  hget('user_prefs', 'user:1', 'theme') → {theme}")
 
-all_prefs = goldlapel.hgetall(conn, "user_prefs", "user:1")
+all_prefs = gl.hgetall("user_prefs", "user:1")
 print(f"  hgetall('user_prefs', 'user:1') → {all_prefs}")
 
-deleted = goldlapel.hdel(conn, "user_prefs", "user:1", "timezone")
+deleted = gl.hdel("user_prefs", "user:1", "timezone")
 print(f"  hdel('user_prefs', 'user:1', 'timezone') → {deleted}")
 
-all_prefs = goldlapel.hgetall(conn, "user_prefs", "user:1")
+all_prefs = gl.hgetall("user_prefs", "user:1")
 print(f"  hgetall after hdel → {all_prefs}")
 
 
@@ -56,23 +57,23 @@ print(f"  hgetall after hdel → {all_prefs}")
 # ─────────────────────────────────────────────────────────────
 section("3. Sorted Sets — zadd / zincrby / zrange / zrank / zscore / zrem")
 
-goldlapel.zadd(conn, "leaderboard", "alice", 100)
-goldlapel.zadd(conn, "leaderboard", "bob", 85)
-goldlapel.zadd(conn, "leaderboard", "carol", 92)
+gl.zadd("leaderboard", "alice", 100)
+gl.zadd("leaderboard", "bob", 85)
+gl.zadd("leaderboard", "carol", 92)
 
-new_score = goldlapel.zincrby(conn, "leaderboard", "bob", 20)
+new_score = gl.zincrby("leaderboard", "bob", 20)
 print(f"  zincrby('leaderboard', 'bob', 20) → {new_score}")
 
-top = goldlapel.zrange(conn, "leaderboard", 0, 3, desc=True)
+top = gl.zrange("leaderboard", 0, 3, desc=True)
 print(f"  zrange (top 3 desc): {top}")
 
-rank = goldlapel.zrank(conn, "leaderboard", "carol", desc=True)
+rank = gl.zrank("leaderboard", "carol", desc=True)
 print(f"  zrank('carol', desc=True) → {rank}")
 
-score = goldlapel.zscore(conn, "leaderboard", "alice")
+score = gl.zscore("leaderboard", "alice")
 print(f"  zscore('alice') → {score}")
 
-removed = goldlapel.zrem(conn, "leaderboard", "bob")
+removed = gl.zrem("leaderboard", "bob")
 print(f"  zrem('bob') → {removed}")
 
 
@@ -81,13 +82,13 @@ print(f"  zrem('bob') → {removed}")
 # ─────────────────────────────────────────────────────────────
 section("4. Queues — enqueue / dequeue")
 
-goldlapel.enqueue(conn, "jobs", {"type": "email", "to": "user@example.com", "subject": "Welcome"})
-goldlapel.enqueue(conn, "jobs", {"type": "resize", "image_id": 42, "width": 800})
-goldlapel.enqueue(conn, "jobs", {"type": "webhook", "url": "https://example.com/hook"})
+gl.enqueue("jobs", {"type": "email", "to": "user@example.com", "subject": "Welcome"})
+gl.enqueue("jobs", {"type": "resize", "image_id": 42, "width": 800})
+gl.enqueue("jobs", {"type": "webhook", "url": "https://example.com/hook"})
 
-job1 = goldlapel.dequeue(conn, "jobs")
+job1 = gl.dequeue("jobs")
 print(f"  dequeue → {job1}")
-job2 = goldlapel.dequeue(conn, "jobs")
+job2 = gl.dequeue("jobs")
 print(f"  dequeue → {job2}")
 
 
@@ -102,11 +103,11 @@ def on_message(channel, payload):
     received.append(payload)
     print(f"  subscriber received: channel={channel}, payload={payload}")
 
-t = goldlapel.subscribe(conn, "notifications", on_message, blocking=False)
+t = gl.subscribe("notifications", on_message, blocking=False)
 time.sleep(0.5)
 
-goldlapel.publish(conn, "notifications", "Hello from Gold Lapel!")
-goldlapel.publish(conn, "notifications", json.dumps({"event": "user_signup", "id": 42}))
+gl.publish("notifications", "Hello from Gold Lapel!")
+gl.publish("notifications", json.dumps({"event": "user_signup", "id": 42}))
 time.sleep(1)
 
 print(f"  total messages received: {len(received)}")
@@ -117,17 +118,17 @@ print(f"  total messages received: {len(received)}")
 # ─────────────────────────────────────────────────────────────
 section("6. Geospatial — geoadd / georadius / geodist")
 
-goldlapel.geoadd(conn, "locations", "name", "geom", "Empire State Building", -73.9857, 40.7484)
-goldlapel.geoadd(conn, "locations", "name", "geom", "Times Square", -73.9855, 40.7580)
-goldlapel.geoadd(conn, "locations", "name", "geom", "Central Park", -73.9654, 40.7829)
-goldlapel.geoadd(conn, "locations", "name", "geom", "Brooklyn Bridge", -73.9969, 40.7061)
+gl.geoadd("locations", "name", "geom", "Empire State Building", -73.9857, 40.7484)
+gl.geoadd("locations", "name", "geom", "Times Square", -73.9855, 40.7580)
+gl.geoadd("locations", "name", "geom", "Central Park", -73.9654, 40.7829)
+gl.geoadd("locations", "name", "geom", "Brooklyn Bridge", -73.9969, 40.7061)
 
-nearby = goldlapel.georadius(conn, "locations", "geom", -73.985, 40.750, 2000, limit=10)
+nearby = gl.georadius("locations", "geom", -73.985, 40.750, 2000, limit=10)
 print(f"  georadius (2km from midtown): {len(nearby)} results")
 for loc in nearby:
     print(f"    {loc['name']}: {loc['distance_m']:.0f}m away")
 
-dist = goldlapel.geodist(conn, "locations", "geom", "name", "Empire State Building", "Brooklyn Bridge")
+dist = gl.geodist("locations", "geom", "name", "Empire State Building", "Brooklyn Bridge")
 print(f"  geodist(Empire State → Brooklyn Bridge): {dist:.0f}m")
 
 
@@ -142,7 +143,7 @@ for cat in ["click", "view", "click", "purchase", "view", "view", "click"]:
     conn.execute("INSERT INTO events (category, value) VALUES (%s, %s)", (cat, 1))
 conn.commit()
 
-distinct = goldlapel.count_distinct(conn, "events", "category")
+distinct = gl.count_distinct("events", "category")
 print(f"  count_distinct('events', 'category') → {distinct}")
 
 print("\n  script() requires pllua extension — skipping in this example.")
@@ -164,4 +165,4 @@ print("    Misc:        count_distinct, script (requires pllua)")
 print("\n  All backed by PostgreSQL. No additional infrastructure.")
 
 conn.close()
-goldlapel.stop()
+gl.stop()

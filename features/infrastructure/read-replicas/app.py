@@ -1,9 +1,10 @@
 import goldlapel
 import time
 
-conn = goldlapel.start("postgres://gl:gl@localhost:5432/todos", config={
+gl = goldlapel.GoldLapel("postgres://gl:gl@localhost:5432/todos", config={
     "replica": "postgres://gl:gl@localhost:5433/todos",
 })
+conn = gl.start()
 
 # Give the replica a moment to start streaming
 time.sleep(2)
@@ -17,11 +18,11 @@ recovery = conn.execute("SELECT pg_is_in_recovery()").fetchone()[0]
 print(f"  Read after write on same connection — replica? {recovery}")
 
 print("\n=== Read on fresh connection (should route to replica) ===")
-c = goldlapel.connect()
+c = gl.connect()
 recovery = c.execute("SELECT pg_is_in_recovery()").fetchone()[0]
 print(f"  Fresh connection read — replica? {recovery}")
 for row in c.execute("SELECT id, title, done FROM todos ORDER BY id"):
     print(f"  {row}")
 c.close()
 
-goldlapel.stop()
+gl.stop()

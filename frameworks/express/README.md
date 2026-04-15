@@ -19,11 +19,12 @@ Gold Lapel starts automatically when `db.js` is first imported — no configurat
 The only GL-specific code is `db.js`:
 
 ```js
-import goldlapel from '@goldlapel/goldlapel';
+import { GoldLapel } from '@goldlapel/goldlapel';
 import pg from 'pg';
 
-await goldlapel.start(process.env.DATABASE_URL);
-export const pool = new pg.Pool({ connectionString: goldlapel.proxyUrl() });
+const gl = new GoldLapel(process.env.DATABASE_URL);
+await gl.start();
+export const pool = new pg.Pool({ connectionString: gl.proxyUrl() });
 ```
 
 Routes import the pool and query normally. That's it — everything else is standard Express.

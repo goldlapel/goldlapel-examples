@@ -21,6 +21,6 @@ Minimal todo app showing Gold Lapel's Node.js wrapper with the `pg` driver.
 
 ## What to look for
 
-GL starts automatically when the app calls `goldlapel.start()`. As it observes
+GL starts automatically when the app calls `gl.start()` on a `GoldLapel` instance. As it observes
 queries, it creates optimizations (indexes, query rewrites) in the background.
 Check the dashboard at http://localhost:7933 to see what GL is doing.

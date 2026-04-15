@@ -19,11 +19,12 @@ Gold Lapel starts automatically when `src/lib/server/db.js` is first imported â€
 The only GL-specific code is `src/lib/server/db.js`:
 
 ```js
-import goldlapel from '@goldlapel/goldlapel';
+import { GoldLapel } from '@goldlapel/goldlapel';
 import pg from 'pg';
 
-await goldlapel.start(process.env.DATABASE_URL);
-export const pool = new pg.Pool({ connectionString: goldlapel.proxyUrl() });
+const gl = new GoldLapel(process.env.DATABASE_URL);
+await gl.start();
+export const pool = new pg.Pool({ connectionString: gl.proxyUrl() });
 ```
 
 The `server/` directory ensures this module is never bundled into client code. API routes import the pool and query normally. That's it â€” everything else is standard SvelteKit.
