@@ -16,8 +16,10 @@ public class App {
             if (gl.getJdbcPassword() != null) props.setProperty("password", gl.getJdbcPassword());
 
             try (Connection conn = DriverManager.getConnection(gl.getJdbcUrl(), props)) {
-                conn.createStatement().execute(
-                    "CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)");
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.execute(
+                        "CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, title text NOT NULL, done boolean DEFAULT false)");
+                }
 
                 try (PreparedStatement ps = conn.prepareStatement("INSERT INTO todos (title) VALUES (?)")) {
                     ps.setString(1, "Try Gold Lapel");
@@ -29,10 +31,12 @@ public class App {
                     ps.execute();
                 }
 
-                ResultSet rs = conn.createStatement().executeQuery("SELECT id, title, done FROM todos ORDER BY id");
-                while (rs.next()) {
-                    System.out.printf("{id: %d, title: %s, done: %s}%n",
-                        rs.getInt("id"), rs.getString("title"), rs.getBoolean("done"));
+                try (Statement stmt = conn.createStatement();
+                     ResultSet rs = stmt.executeQuery("SELECT id, title, done FROM todos ORDER BY id")) {
+                    while (rs.next()) {
+                        System.out.printf("{id: %d, title: %s, done: %s}%n",
+                            rs.getInt("id"), rs.getString("title"), rs.getBoolean("done"));
+                    }
                 }
             }
 
