@@ -13,9 +13,7 @@ import (
 func main() {
 	ctx := context.Background()
 
-	gl, err := goldlapel.Start(ctx, "postgres://gl:gl@localhost:5432/todos",
-		goldlapel.WithPort(7932),
-	)
+	gl, err := goldlapel.Start(ctx, "postgres://gl:gl@localhost:5432/todos")
 	if err != nil {
 		log.Fatal(err)
 	}
