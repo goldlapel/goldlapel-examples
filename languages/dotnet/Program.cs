@@ -1,5 +1,5 @@
 // dotnet add package GoldLapel
-using Goldlapel;
+using GoldLapel;
 using Npgsql;
 
 await using var gl = await GoldLapel.StartAsync(
