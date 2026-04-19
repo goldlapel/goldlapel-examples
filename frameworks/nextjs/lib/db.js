@@ -1,6 +1,20 @@
-import { GoldLapel } from '@goldlapel/goldlapel';
+import goldlapel from 'goldlapel';
 import pg from 'pg';
 
-const gl = new GoldLapel(process.env.DATABASE_URL);
-await gl.start();
-export const pool = new pg.Pool({ connectionString: gl.proxyUrl() });
+let _instance = null;
+let _pool = null;
+
+export async function getGl() {
+  if (!_instance) {
+    _instance = await goldlapel.start(process.env.DATABASE_URL);
+  }
+  return _instance;
+}
+
+export async function getPool() {
+  if (!_pool) {
+    const gl = await getGl();
+    _pool = new pg.Pool({ connectionString: gl.url });
+  }
+  return _pool;
+}

@@ -12,21 +12,35 @@ Minimal Next.js App Router example with Gold Lapel optimizing Postgres queries.
 
 ## What to look for
 
-Gold Lapel starts automatically when `lib/db.js` is first imported — no configuration needed. Your app connects through GL's optimizing proxy instead of directly to Postgres. Check the dashboard at http://localhost:7933 to see what GL found.
+Gold Lapel starts lazily on the first database request — no configuration needed. Your app connects through GL's optimizing proxy instead of directly to Postgres. Check the dashboard at http://localhost:7933 to see what GL found.
 
 ## How it works
 
 The only GL-specific code is `lib/db.js`:
 
 ```js
-import { GoldLapel } from '@goldlapel/goldlapel';
+import goldlapel from 'goldlapel';
 import pg from 'pg';
 
-const gl = new GoldLapel(process.env.DATABASE_URL);
-await gl.start();
-export const pool = new pg.Pool({ connectionString: gl.proxyUrl() });
+let _instance = null;
+let _pool = null;
+
+export async function getGl() {
+  if (!_instance) {
+    _instance = await goldlapel.start(process.env.DATABASE_URL);
+  }
+  return _instance;
+}
+
+export async function getPool() {
+  if (!_pool) {
+    const gl = await getGl();
+    _pool = new pg.Pool({ connectionString: gl.url });
+  }
+  return _pool;
+}
 ```
 
-API routes import the pool and query normally. That's it — everything else is standard Next.js.
+Route handlers call `await getPool()` inside the async function body — not at module load — so `next build`'s page-data collection doesn't have to wait for GL to spawn.
 
 If you use Prisma or Drizzle, see the dedicated adapters: `@goldlapel/prisma` and `@goldlapel/drizzle`.
