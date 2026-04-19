@@ -1,7 +1,8 @@
 import { json } from '@sveltejs/kit';
-import { pool } from '$lib/server/db.js';
+import { getPool } from '$lib/server/db.js';
 
 export async function POST() {
+  const pool = await getPool();
   await pool.query(`
     CREATE TABLE IF NOT EXISTS todos (
       id SERIAL PRIMARY KEY,

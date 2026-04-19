@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@goldlapel/goldlapel": "latest",
+    "goldlapel": "latest",
     "pg": "^8.20.0"
   },
   "devDependencies": {
