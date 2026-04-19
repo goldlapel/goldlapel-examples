@@ -22,7 +22,7 @@ Use the GL wrapper package for your language.
 | Example | Install |
 |---------|---------|
 | [languages/python](languages/python/) | `pip install goldlapel` |
-| [languages/javascript](languages/javascript/) | `npm install @goldlapel/goldlapel` |
+| [languages/javascript](languages/javascript/) | `npm install goldlapel` |
 | [languages/ruby](languages/ruby/) | `gem install goldlapel` |
 | [languages/go](languages/go/) | `go get github.com/goldlapel/goldlapel-go` |
 | [languages/java](languages/java/) | `com.goldlapel:goldlapel` (Maven) |

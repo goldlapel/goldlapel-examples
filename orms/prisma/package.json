@@ -4,7 +4,7 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "^5",
-    "@goldlapel/goldlapel": "latest",
+    "goldlapel": "latest",
     "@goldlapel/prisma": "latest",
     "prisma": "^5"
   }
