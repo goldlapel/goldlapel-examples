@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@goldlapel/goldlapel": "latest",
+    "goldlapel": "latest",
     "pg": "^8.20.0"
   }
 }
