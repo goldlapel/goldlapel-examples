@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="GoldLapel" Version="0.1.0-rc15" />
+    <PackageReference Include="GoldLapel" Version="0.2.0" />
     <PackageReference Include="Npgsql" Version="8.*" />
   </ItemGroup>
 </Project>

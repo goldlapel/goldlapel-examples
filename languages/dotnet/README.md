@@ -16,4 +16,14 @@ Minimal example showing Gold Lapel optimizing Postgres queries via the .NET wrap
 
 ## What to look for
 
-GL starts automatically when `GoldLapel.Start()` is called. As it observes queries, it creates optimizations (indexes, rewrites) in the background. Check the dashboard at http://localhost:7933 to see what it found.
+The app calls `await GoldLapel.StartAsync(upstream, opts => ...)`, which
+spawns the proxy and returns a `GoldLapel` instance. `gl.Url` is a
+Npgsql-ready connection string — pass it to `new NpgsqlConnection(...)`. The
+same instance exposes wrapper methods (`gl.DocInsertAsync`, `gl.SearchAsync`,
+etc.) directly.
+
+`await using` auto-stops the proxy at scope end.
+
+As GL observes queries, it creates optimizations (indexes, matviews, query
+rewrites) in the background. Check the dashboard at http://localhost:7933 to
+see what it found.
