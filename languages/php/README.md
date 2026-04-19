@@ -21,4 +21,14 @@ Minimal example showing Gold Lapel optimizing Postgres queries via the PHP wrapp
 
 ## What to look for
 
-GL starts automatically when `GoldLapel::start()` is called. As it observes queries, it creates optimizations (indexes, rewrites) in the background. Check the dashboard at http://localhost:7933 to see what it found.
+The app calls `GoldLapel::start($upstream, $options)`, which spawns the proxy
+and returns a `GoldLapel` instance. `$gl->pdoDsn()` / `$gl->pdoCredentials()`
+give you PDO-ready values; `$gl->url()` returns the raw `postgresql://...`
+URL for libraries that want the URL form.
+
+The same instance exposes wrapper methods (`$gl->docInsert`, `$gl->search`,
+etc.) directly.
+
+As GL observes queries, it creates optimizations (indexes, matviews, query
+rewrites) in the background. Check the dashboard at http://localhost:7933 to
+see what it found.
