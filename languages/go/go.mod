@@ -3,7 +3,7 @@ module goldlapel-go-example
 go 1.25.0
 
 require (
-	github.com/goldlapel/goldlapel-go v0.1.0-rc15
+	github.com/goldlapel/goldlapel-go v0.2.0
 	github.com/jackc/pgx/v5 v5.7.4
 )
 

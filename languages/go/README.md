@@ -21,6 +21,14 @@ Minimal example showing Gold Lapel optimizing Postgres queries via the Go wrappe
 
 ## What to look for
 
-GL starts automatically when `goldlapel.Start()` is called. As it observes
-queries, it creates optimizations (indexes, query rewrites) in the background.
-Check the dashboard at http://localhost:7933 to see what GL is doing.
+The app calls `goldlapel.Start(ctx, upstream, opts...)`, which spawns the
+proxy and returns a `*GoldLapel`. `gl.URL()` is the proxy connection string —
+pass it to `pgx.Connect` (or any Postgres driver) for raw SQL. The same
+instance also exposes wrapper methods (`gl.DocInsert`, `gl.Search`, etc.)
+directly.
+
+`defer gl.Close()` sends SIGTERM to the proxy and waits for it to exit.
+
+As GL observes queries, it creates optimizations (indexes, matviews, query
+rewrites) in the background. Check the dashboard at http://localhost:7933
+to see what it found.

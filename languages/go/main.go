@@ -1,3 +1,4 @@
+// go get github.com/goldlapel/goldlapel-go github.com/jackc/pgx/v5
 package main
 
 import (
@@ -11,13 +12,16 @@ import (
 
 func main() {
 	ctx := context.Background()
-	url, err := goldlapel.Start("postgres://gl:gl@localhost:5432/todos")
+
+	gl, err := goldlapel.Start(ctx, "postgres://gl:gl@localhost:5432/todos",
+		goldlapel.WithPort(7932),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer goldlapel.Stop()
+	defer gl.Close()
 
-	conn, err := pgx.Connect(ctx, url)
+	conn, err := pgx.Connect(ctx, gl.URL())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,12 +31,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = conn.Exec(ctx, "INSERT INTO todos (title) VALUES ($1)", "Try Gold Lapel")
-	if err != nil {
+	if _, err := conn.Exec(ctx, "INSERT INTO todos (title) VALUES ($1)", "Try Gold Lapel"); err != nil {
 		log.Fatal(err)
 	}
-	_, err = conn.Exec(ctx, "INSERT INTO todos (title, done) VALUES ($1, $2)", "Read the docs", true)
-	if err != nil {
+	if _, err := conn.Exec(ctx, "INSERT INTO todos (title, done) VALUES ($1, $2)", "Read the docs", true); err != nil {
 		log.Fatal(err)
 	}
 
@@ -50,4 +52,14 @@ func main() {
 		}
 		fmt.Printf("{id: %d, title: %s, done: %v}\n", id, title, done)
 	}
+
+	// Wrapper methods also work directly on the GoldLapel instance.
+	if _, err := gl.DocInsert(ctx, "events", map[string]any{"type": "demo.ran"}); err != nil {
+		log.Fatal(err)
+	}
+	hits, err := gl.DocFind(ctx, "events", map[string]any{"type": "demo.ran"})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("events: %v\n", hits)
 }
