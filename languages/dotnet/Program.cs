@@ -3,10 +3,7 @@ using Goldlapel;
 using Npgsql;
 
 await using var gl = await GoldLapel.StartAsync(
-    "postgres://gl:gl@localhost:5432/todos",
-    opts => {
-        opts.Port = 7932;
-    });
+    "postgres://gl:gl@localhost:5432/todos");
 
 await using var conn = new NpgsqlConnection(gl.Url);
 await conn.OpenAsync();

@@ -6,9 +6,7 @@ import java.util.Properties;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        try (GoldLapel gl = GoldLapel.start("postgres://gl:gl@localhost:5432/todos", opts -> {
-            opts.setPort(7932);
-        })) {
+        try (GoldLapel gl = GoldLapel.start("postgres://gl:gl@localhost:5432/todos")) {
             // The JDBC driver rejects inline userinfo — use the JDBC URL plus
             // the parsed user/password properties.
             Properties props = new Properties();

@@ -4,9 +4,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use GoldLapel\GoldLapel;
 
-$gl = GoldLapel::start('postgres://gl:gl@localhost:5432/todos', [
-    'port' => 7932,
-]);
+$gl = GoldLapel::start('postgres://gl:gl@localhost:5432/todos');
 
 try {
     // Build a PDO against the proxy — pdoDsn() + pdoCredentials() handle the
