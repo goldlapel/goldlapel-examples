@@ -6,7 +6,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@goldlapel/goldlapel": "latest",
+    "goldlapel": "latest",
     "express": "^4.21.0",
     "pg": "^8.20.0"
   }
