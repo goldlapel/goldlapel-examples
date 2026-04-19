@@ -16,4 +16,15 @@ Minimal example showing Gold Lapel optimizing Postgres queries via the Java wrap
 
 ## What to look for
 
-GL starts automatically when `gl.start()` is called on a `new GoldLapel(...)` instance. As it observes queries, it creates optimizations (indexes, rewrites) in the background. Check the dashboard at http://localhost:7933 to see what it found.
+The app calls `GoldLapel.start(upstream, opts -> ...)`, which spawns the proxy
+and returns a `GoldLapel` instance (try-with-resources auto-stops it). Because
+the PostgreSQL JDBC driver doesn't accept inline userinfo, the example uses
+`gl.getJdbcUrl()` + `gl.getJdbcUser()` / `gl.getJdbcPassword()` to hand a
+clean URL and `Properties` to `DriverManager`.
+
+The same instance exposes wrapper methods (`gl.docInsert`, `gl.search`, etc.)
+directly.
+
+As GL observes queries, it creates optimizations (indexes, matviews, query
+rewrites) in the background. Check the dashboard at http://localhost:7933 to
+see what it found.
