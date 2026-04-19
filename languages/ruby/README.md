@@ -21,4 +21,13 @@ Minimal example showing Gold Lapel optimizing Postgres queries via the Ruby wrap
 
 ## What to look for
 
-GL starts automatically when `gl.start` is called on a `GoldLapel.new` instance. As it observes queries, it creates optimizations (indexes, rewrites) in the background. Check the dashboard at http://localhost:7933 to see what it found.
+The app calls `Goldlapel.start(upstream)`, which spawns the proxy and returns
+a `Goldlapel::Instance`. `gl.url` is the proxy connection string — pass it to
+`PG.connect(...)` for raw SQL. The same instance also exposes wrapper methods
+(`gl.doc_insert`, `gl.search`, etc.) directly.
+
+`gl.stop` shuts the proxy down; it also runs automatically on process exit.
+
+As GL observes queries, it creates optimizations (indexes, matviews, query
+rewrites) in the background. Check the dashboard at http://localhost:7933 to
+see what it found.
