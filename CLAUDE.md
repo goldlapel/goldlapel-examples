@@ -57,16 +57,14 @@ If issues found: fix them, then do another full code review of the fixes. Repeat
 - For tough/tricky/high-risk bugs, use extended thinking
 - If a code review keeps finding new errors, use your best judgement on when to stop trying to fix it. Report back the nature of the issue.
 
-## Project Docs
+## Gold Lapel Product Context
 
-- `docs/ROADMAP.md` — living roadmap (incomplete work)
-- `docs/SHIPPED.md` — completed work archive
-- `docs/INTEGRATIONS.md` — wrapper/plugin status
-- `docs/ARCHITECTURE.md` — target architecture reference
-- `docs/todos/RELEASE-TODOS.md` — release workflow, secrets, plugin publishing
-- `docs/notes/` — PRICING.md, research files
+This repo holds runnable example apps + demos. The product source of truth lives in the main proxy repo:
 
-When completing work: update SHIPPED.md, remove from ROADMAP.md, and clean up any related TODOs.
+- `/home/sgibson/dev/gl/goldlapel/docs/ROADMAP.md` — living roadmap
+- `/home/sgibson/dev/gl/goldlapel/docs/ARCHITECTURE.md` — architecture reference
+- `/home/sgibson/dev/gl/goldlapel/docs/SHIPPED.md` — completed work
+- `/home/sgibson/dev/gl/goldlapel/docs/PRICING.md` — pricing + licensing canonical doc
 
 ## Git Management
 
@@ -89,22 +87,6 @@ When completing work: update SHIPPED.md, remove from ROADMAP.md, and clean up an
 - Never use `cursor: not-allowed` anywhere in the site. Ever.
 - Instead use `cursor: pointer` or `cursor: default` with visual effects (opacity, muted colors, spinners) to communicate disabled/loading states. Concierge, not bouncer.
 
-## Database
+## Examples-Specific
 
-- Dev mode: no migrations, no backwards compatibility, no backups — break the schema freely, delete local data, recreate from scratch
-
-## Testing
-
-- API tests use pytest + pytest-asyncio + httpx
-- Run tests with `./scripts/test.sh` (default: all), `-L` local only, `-E` external only
-- Rust unit tests use `#[cfg(test)] mod tests` in-file (idiomatic Rust — tests private fns directly)
-- Run tests with `./scripts/test.sh` or `cargo test`
-
-## Python Environment
-
-- Venv lives at project root: `.venv/` (not `api/venv/`)
-- Use `uv pip` to install packages (not pip directly)
-- Two requirements files:
-  - `api/requirements.txt` — concise list of packages we explicitly install (unpinned)
-  - `api/requirements-lock.txt` — full pinned versions from `uv pip freeze`
-- When adding a new package: `uv pip install <pkg>`, add it to `requirements.txt`, then run `uv pip freeze > api/requirements-lock.txt`
+This repo holds runnable example apps + demos in multiple languages. Each example has its own conventions for running and testing — refer to the local `README.md` in each example directory for setup and run instructions. The cross-repo guidelines above (communication, workflow, code review, git management) apply throughout.
