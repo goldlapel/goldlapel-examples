@@ -1,5 +1,7 @@
 # Coding Guidelines for Claude
 
+*Working preferences, git policy, review loop and code style also live in `~/.claude/CLAUDE.md`; where they differ, this file wins. Subagent guidance below is superseded — see the memory note in `~/.claude/CLAUDE.md`.*
+
 ## Communication
 
 - Proactively offer constructive criticism, flag bad ideas, suggest better alternatives, and surface trade-offs — don't wait to be asked, kindly push back when it's helpful.
@@ -31,16 +33,6 @@ The build/test/review loop (step 4):
 5. Commit the clean change
 
 - For visual changes, use Playwright to take screenshots and review them to ensure the design looks great.
-
-## Subagent Workflow
-
-- When a task is clearly defined, launch it in a subagent
-- Keep subagents topped off at a rolling pipeline of up to 5 concurrent agents
-- Scope each agent to non-overlapping files or repos to avoid merge conflicts
-- Give each agent clear exit criteria: fix → test → code review → repeat until review is clean → commit → add unit/integration tests → run relevant tests to ensure no regressions
-- Backfill new agents as each completes to maintain throughput
-
-This enables parallel execution while keeping the main conversation free for discussion and decisions.
 
 ## Code Review
 
